@@ -1,5 +1,9 @@
 # python-study
-# tmp
+# endpoint rule
+* / -> home
+* /account/
+* /budget/
+* /category/
 # tmp
 # tmp
 # tmp
