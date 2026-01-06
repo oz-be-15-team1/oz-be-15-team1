@@ -1,5 +1,7 @@
 from django.db import models
+
 from apps.account.models import Account
+
 
 class Transaction(models.Model):
     DIRECTION_CHOICES = [
@@ -8,11 +10,7 @@ class Transaction(models.Model):
         ("transfer", "Transfer"),
     ]
 
-    account = models.ForeignKey(
-        Account,
-        on_delete=models.CASCADE,
-        related_name="transactions"
-    )
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="transactions")
 
     amount = models.DecimalField(max_digits=14, decimal_places=2)
     balance_after = models.DecimalField(max_digits=14, decimal_places=2)

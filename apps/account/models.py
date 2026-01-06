@@ -1,5 +1,7 @@
 from django.db import models
+
 from apps.members.models import User
+
 
 class Account(models.Model):
     SOURCE_TYPE_CHOICES = [
@@ -8,11 +10,7 @@ class Account(models.Model):
         ("cash", "Cash"),
     ]
 
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="accounts"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="accounts")
 
     name = models.CharField(max_length=50)
     source_type = models.CharField(max_length=10, choices=SOURCE_TYPE_CHOICES)

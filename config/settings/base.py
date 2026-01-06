@@ -1,5 +1,6 @@
-from pathlib import Path
 import os
+from pathlib import Path
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -19,15 +20,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "drf_spectacular",
-
     # OWN APPS
     "apps.account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
     "apps.transaction.apps.TransactionConfig",
-
     # 3rd PARTY APPS
     "django_extensions",
 ]
