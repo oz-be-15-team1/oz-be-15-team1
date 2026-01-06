@@ -1,0 +1,29 @@
+from django.db import models
+from apps.account.models import Account
+
+class Transaction(models.Model):
+    DIRECTION_CHOICES = [
+        ("income", "Income"),
+        ("expense", "Expense"),
+        ("transfer", "Transfer"),
+    ]
+
+    account = models.ForeignKey(
+        Account,
+        on_delete=models.CASCADE,
+        related_name="transactions"
+    )
+
+    amount = models.DecimalField(max_digits=14, decimal_places=2)
+    balance_after = models.DecimalField(max_digits=14, decimal_places=2)
+
+    direction = models.CharField(max_length=10, choices=DIRECTION_CHOICES)
+    method = models.CharField(max_length=20)
+    description = models.CharField(max_length=255, blank=True)
+
+    occurred_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.account.name} - {self.amount} ({self.direction})"
