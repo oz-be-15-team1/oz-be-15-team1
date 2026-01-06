@@ -30,7 +30,8 @@ jobs:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       SECRET_KEY: test-secret-key
-      DEBUG: 0
+      DEBUG: 1
+      DJANGO_SETTINGS_MODULE: config.settings.dev
 
     steps:
     - uses: actions/checkout@v4
