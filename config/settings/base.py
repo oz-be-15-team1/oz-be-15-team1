@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "apps.account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
     "apps.transaction.apps.TransactionConfig",
+    "apps.core.apps.CoreConfig",
     # 3rd PARTY APPS
     "django_extensions",
 ]

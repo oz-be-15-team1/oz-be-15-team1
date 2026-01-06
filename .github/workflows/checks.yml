@@ -64,6 +64,9 @@ jobs:
     - name: Run ruff
       run: uv run ruff check .
 
+    - name: Wait for DB
+      run: uv run python manage.py wait_for_db
+
     - name: Run Django migrations
       run: uv run python manage.py migrate
 
