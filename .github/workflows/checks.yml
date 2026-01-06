@@ -17,6 +17,8 @@ jobs:
           POSTGRES_DB: budget
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -24,7 +26,7 @@ jobs:
           --health-retries 5
 
     env:
-      DB_HOST: postgres
+      DB_HOST: localhost
       DB_PORT: 5432
       POSTGRES_DB: budget
       POSTGRES_USER: postgres
@@ -53,7 +55,7 @@ jobs:
       run: |
         echo "SECRET_KEY=test-secret-key" > .env
         echo "DEBUG=1" >> .env
-        echo "DB_HOST=postgres" >> .env
+        echo "DB_HOST=localhost" >> .env
         echo "DB_PORT=5432" >> .env
         echo "POSTGRES_DB=budget" >> .env
         echo "POSTGRES_USER=postgres" >> .env
