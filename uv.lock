@@ -29,8 +29,13 @@ dependencies = [
     { name = "django-extensions" },
     { name = "djangorestframework" },
     { name = "drf-spectacular" },
+<<<<<<< HEAD
     { name = "pillow" },
+=======
+    { name = "pre-commit" },
+>>>>>>> 4affc15 (Resolve conflicts after rebase)
     { name = "psycopg", extra = ["binary"] },
+    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
@@ -49,8 +54,13 @@ requires-dist = [
     { name = "django-extensions", specifier = ">=4.1" },
     { name = "djangorestframework" },
     { name = "drf-spectacular" },
+<<<<<<< HEAD
     { name = "pillow" },
+=======
+    { name = "pre-commit", specifier = ">=4.5.1" },
+>>>>>>> 4affc15 (Resolve conflicts after rebase)
     { name = "psycopg", extras = ["binary"] },
+    { name = "ruff", specifier = ">=0.14.10" },
 ]
 
 [package.metadata.requires-dev]
