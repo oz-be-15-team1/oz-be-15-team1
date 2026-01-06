@@ -53,7 +53,7 @@ jobs:
       run: |
         echo "SECRET_KEY=test-secret-key" > .env
         echo "DEBUG=1" >> .env
-        echo "DB_HOST=localhost" >> .env
+        echo "DB_HOST=postgres" >> .env
         echo "DB_PORT=5432" >> .env
         echo "POSTGRES_DB=budget" >> .env
         echo "POSTGRES_USER=postgres" >> .env
