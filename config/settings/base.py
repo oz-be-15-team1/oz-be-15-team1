@@ -1,5 +1,8 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -20,7 +23,13 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
 
-    "apps.budget.apps.BudgetConfig",
+    # OWN APPS
+    "apps.account.apps.AccountConfig",
+    "apps.members.apps.MembersConfig",
+    "apps.transaction.apps.TransactionConfig",
+
+    # 3rd PARTY APPS
+    "django_extensions",
 ]
 
 MIDDLEWARE = [

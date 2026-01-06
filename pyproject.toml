@@ -5,6 +5,7 @@ requires-python = ">=3.12"
 
 dependencies = [
     "django",
+    "django-extensions>=4.1",
     "djangorestframework",
     "drf-spectacular",
     "psycopg[binary]",
