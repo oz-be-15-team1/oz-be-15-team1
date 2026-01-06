@@ -8,7 +8,9 @@ dependencies = [
     "django-extensions>=4.1",
     "djangorestframework",
     "drf-spectacular",
+    "pre-commit>=4.5.1",
     "psycopg[binary]",
+    "ruff>=0.14.10",
 ]
 
 [dependency-groups]

@@ -1,0 +1,7 @@
+SECRET_KEY=!o$d5qz-^$zam3dnnutku0o04kl_gf*y7j_@w2h@8n(jyxoo6$
+DEBUG=1
+DB_HOST=localhost
+POSTGRES_DB=budget
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_PORT=5433
