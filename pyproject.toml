@@ -19,6 +19,7 @@ dependencies = [
     "redis",
     "ruff>=0.14.10",
     "gunicorn",
+    "djangorestframework-simplejwt>=5.5.1",
 ]
 
 

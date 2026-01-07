@@ -4,12 +4,19 @@ from .models import User
 
 
 # 사용자 회원가입 요청 데이터 스펙 (Request Body)
-class UserSignupRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    name = serializers.CharField()
-    nickname = serializers.CharField()
-    phone = serializers.CharField(required=False, allow_blank=True)
+
+    class Meta:
+        model = User
+        fields = ["email", "password", "name", "nickname", "phone"]
+
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)  # 비밀번호 암호화
+        user.save()
+        return user
 
 
 # 사용자 회원가입 응답 데이터 스펙 (Response Body)
