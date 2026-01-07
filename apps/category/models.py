@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Create your models here.
-=======
 from django.db import models
 from django.utils import timezone
 
@@ -38,4 +35,3 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
->>>>>>> fbd0bc3 (✨ feat: 새로운 기능 추가 ( category, tag ))
