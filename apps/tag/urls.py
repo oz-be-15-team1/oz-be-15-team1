@@ -1,9 +1,10 @@
 from django.urls import path
+
 from .views import (
-    TagListCreateView,
     TagDetailView,
-    TagTrashListView,
+    TagListCreateView,
     TagRestoreView,
+    TagTrashListView,
 )
 
 app_name = "tag"
