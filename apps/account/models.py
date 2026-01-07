@@ -4,6 +4,7 @@ from apps.members.models import User
 
 
 class Account(models.Model):
+    id: int
     SOURCE_TYPE_CHOICES = [
         ("bank", "Bank"),
         ("card", "Card"),

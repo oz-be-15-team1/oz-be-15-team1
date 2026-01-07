@@ -16,7 +16,8 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     # 사용자는 본인의 계좌만 조회/생성 가능
     def get_queryset(self):
-        return Account.objects.filter(user=self.request.user)
+        # select_related로 user 정보를 한 번에 가져와 N+1 문제 해결
+        return Account.objects.select_related('user').filter(user=self.request.user)
 
     # 생성 동작일 때 특정 시리얼라이저 사용
     def get_serializer_class(self):
@@ -27,6 +28,17 @@ class AccountViewSet(viewsets.ModelViewSet):
     # 계좌 생성 시 현재 사용자와 연동
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        # 생성 요청 시리얼라이저로 유효성 검사
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # 생성 수행
+        self.perform_create(serializer)
+        # 응답은 AccountResponseSerializer 사용
+        instance = serializer.instance
+        response_serializer = AccountResponseSerializer(instance)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
     # update/partial_update 호출 시 명시적 예외 반환(필수X)
     def update(self, request, *args, **kwargs):

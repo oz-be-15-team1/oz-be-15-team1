@@ -4,6 +4,7 @@ from apps.account.models import Account
 
 
 class Transaction(models.Model):
+    id: int
     DIRECTION_CHOICES = [
         ("income", "Income"),
         ("expense", "Expense"),

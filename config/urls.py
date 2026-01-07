@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -14,3 +15,11 @@ urlpatterns = [
     path("api/categories/", include("apps.category.urls")),
     path("api/tags/", include("apps.tag.urls")),
 ]
+
+# django-debug-toolbar URL 추가 (개발 환경에서만)
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns
+
