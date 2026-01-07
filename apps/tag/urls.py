@@ -1,5 +1,3 @@
-
 app_name = "tag"
 
-urlpatterns = [
-]
+urlpatterns = []
