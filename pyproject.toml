@@ -4,13 +4,23 @@ version = "0.1.0"
 requires-python = ">=3.12"
 
 dependencies = [
+    "celery",
     "django",
+    "django-celery-beat",
+    "django-celery-results",
     "django-extensions>=4.1",
     "djangorestframework",
     "drf-spectacular",
+    "matplotlib",
+    "pandas",
+    "pre-commit>=4.5.1",
     "psycopg[binary]",
     "Pillow",
+    "redis",
+    "ruff>=0.14.10",
 ]
+
+
 
 [dependency-groups]
 dev = [

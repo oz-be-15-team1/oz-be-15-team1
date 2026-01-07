@@ -30,10 +30,12 @@ INSTALLED_APPS = [
     "apps.budget.apps.BudgetConfig",
     "apps.analysis.apps.AnalysisConfig",
     "apps.notification.apps.NotificationConfig",
-    "apps.category.apps.CategoryConfig",
     "apps.trashcan.apps.TrashcanConfig",
     # 3rd PARTY APPS
     "django_extensions",
+    # category/tag
+    "apps.category.apps.CategoryConfig",
+    "apps.tag.apps.TagConfig",
 ]
 
 MIDDLEWARE = [
