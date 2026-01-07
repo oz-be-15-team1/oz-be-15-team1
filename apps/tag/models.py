@@ -8,8 +8,6 @@ class Tag(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="tags",
-        null=True,
-        blank=True,
     )
     name = models.CharField(max_length=50)
     color = models.CharField(max_length=20, blank=True, default="")

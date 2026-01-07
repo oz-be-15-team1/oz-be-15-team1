@@ -1,26 +1,23 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 
 class Category(models.Model):
     class Kind(models.TextChoices):
-        INCOME = "INCOME", "Income"
-        EXPENSE = "EXPENSE", "Expense"
+        INCOME = "INCOME", "INCOME"
+        EXPENSE = "EXPENSE", "EXPENSE"
 
-    name = models.CharField(max_length=50)
-    kind = models.CharField(max_length=10, choices=Kind.choices, default=Kind.EXPENSE)
-    sort_order = models.PositiveIntegerField(default=0)
-
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="categories")
     parent = models.ForeignKey(
-        "self",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="children",
+        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="children"
     )
 
+    name = models.CharField(max_length=50)
+    kind = models.CharField(max_length=10, choices=Kind.choices)
+    sort_order = models.IntegerField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def soft_delete(self):
@@ -32,6 +29,13 @@ class Category(models.Model):
         if self.deleted_at is not None:
             self.deleted_at = None
             self.save(update_fields=["deleted_at"])
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["user", "deleted_at"]),
+            models.Index(fields=["user", "kind", "deleted_at"]),
+        ]
+        ordering = ["sort_order", "id"]
 
     def __str__(self) -> str:
         return self.name
