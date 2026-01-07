@@ -10,12 +10,11 @@ dependencies = [
     "drf-spectacular",
     "pre-commit>=4.5.1",
     "psycopg[binary]",
-<<<<<<< HEAD
     "Pillow",
-=======
     "ruff>=0.14.10",
->>>>>>> 4affc15 (Resolve conflicts after rebase)
 ]
+
+
 
 [dependency-groups]
 dev = [
