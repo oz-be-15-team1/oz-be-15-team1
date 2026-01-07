@@ -11,7 +11,7 @@ from .models import Notification
 class NotificationModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="test@example.com", password="testpass123", name="Test User", nickname="testuser"
+            email="test@example.com", password="testpass123", name="Test User"
         )
 
     def test_notification_creation(self):
@@ -37,13 +37,12 @@ class NotificationModelTest(TestCase):
 class NotificationAPITest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="api@example.com", password="apitest123", name="API User", nickname="apiuser"
+            email="api@example.com", password="apitest123", name="API User"
         )
         self.other_user = User.objects.create_user(
             email="other@example.com",
             password="othertest123",
             name="Other User",
-            nickname="otheruser",
         )
         self.client.force_authenticate(user=self.user)
 
