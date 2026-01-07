@@ -5,12 +5,15 @@ from rest_framework.views import APIView
 
 from .repositories import CategoryRepository
 from .serializers import CategoryCreateUpdateSerializer, CategoryReadSerializer
-from .services import CategoryService
+from .models import Category
+
+from apps.trashcan.services import TrashService
+from apps.trashcan.views import TrashListAPIView, RestoreAPIView
+
 
 
 class CategoryListCreateView(APIView):
     permission_classes = [IsAuthenticated]
-
     serializer_class = CategoryReadSerializer
 
     def get(self, request):
@@ -26,7 +29,6 @@ class CategoryListCreateView(APIView):
 
 class CategoryDetailView(APIView):
     permission_classes = [IsAuthenticated]
-
     serializer_class = CategoryReadSerializer
 
     def get(self, request, category_id: int):
@@ -41,25 +43,12 @@ class CategoryDetailView(APIView):
         return Response(CategoryReadSerializer(obj).data)
 
     def delete(self, request, category_id: int):
-        CategoryService.soft_delete(request.user.id, category_id)
+        TrashService.soft_delete(Category, request.user.id, category_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class CategoryTrashListView(APIView):
-    permission_classes = [IsAuthenticated]
-
+class CategoryTrashListView(TrashListAPIView):
+    model = Category
     serializer_class = CategoryReadSerializer
 
-    def get(self, request):
-        qs = CategoryRepository.list_deleted(request.user.id)
-        return Response(CategoryReadSerializer(qs, many=True).data)
-
-
-class CategoryRestoreView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    serializer_class = CategoryReadSerializer
-
-    def post(self, request, category_id: int):
-        CategoryService.restore(request.user.id, category_id)
-        return Response(status=status.HTTP_200_OK)
+class CategoryRestoreView(RestoreAPIView):
+    model = Category
