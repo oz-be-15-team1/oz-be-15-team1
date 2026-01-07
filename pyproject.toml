@@ -12,6 +12,12 @@ dependencies = [
     "psycopg[binary]",
     "Pillow",
     "ruff>=0.14.10",
+    "pandas",
+    "matplotlib",
+    "celery",
+    "django-celery-beat",
+    "django-celery-results",
+    "redis",
 ]
 
 
