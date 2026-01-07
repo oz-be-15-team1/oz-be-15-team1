@@ -60,6 +60,7 @@ dependencies = [
     { name = "pillow" },
     { name = "pre-commit" },
     { name = "psycopg", extra = ["binary"] },
+    { name = "python-dotenv" },
     { name = "redis" },
     { name = "ruff" },
 ]
@@ -91,6 +92,7 @@ requires-dist = [
     { name = "pillow" },
     { name = "pre-commit", specifier = ">=4.5.1" },
     { name = "psycopg", extras = ["binary"] },
+    { name = "python-dotenv", specifier = ">=1.2.1" },
     { name = "redis" },
     { name = "ruff", specifier = ">=0.14.10" },
 ]

@@ -11,6 +11,9 @@ urlpatterns = [
     path("api/notification/", include("apps.notification.urls")),
     path("api/accounts/", include("apps.account.urls")),
     path("api/transactions/", include("apps.transaction.urls")),
+    path("api/users/", include("apps.members.urls")),
+    path("api/categories/", include("apps.category.urls")),
+    path("api/tags/", include("apps.tag.urls")),
 ]
 
 # django-debug-toolbar URL 추가 (개발 환경에서만)
