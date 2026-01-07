@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     "apps.transaction.apps.TransactionConfig",
     # 3rd PARTY APPS
     "django_extensions",
+    # category/tag
+    "apps.category.apps.CategoryConfig",
+    "apps.tag.apps.TagConfig",
 ]
 
 MIDDLEWARE = [
