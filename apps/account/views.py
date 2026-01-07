@@ -16,7 +16,8 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     # 사용자는 본인의 계좌만 조회/생성 가능
     def get_queryset(self):
-        return Account.objects.filter(user=self.request.user)
+        # select_related로 user 정보를 한 번에 가져와 N+1 문제 해결
+        return Account.objects.select_related('user').filter(user=self.request.user)
 
     # 생성 동작일 때 특정 시리얼라이저 사용
     def get_serializer_class(self):

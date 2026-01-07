@@ -25,7 +25,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     # 현재 요청 사용자의 계좌에 속한 거래만 조회되도록 제한
     def get_queryset(self):
-        qs = Transaction.objects.filter(account__user=self.request.user)
+        # select_related로 account와 user 정보를 한 번에 가져와 N+1 문제 해결
+        qs = Transaction.objects.select_related('account', 'account__user').filter(account__user=self.request.user)
 
         # 필터링: account, direction, 금액 범위, 날짜 범위
         params = self.request.query_params

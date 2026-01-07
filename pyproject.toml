@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "budget"
 version = "0.1.0"
@@ -22,6 +26,9 @@ dependencies = [
     "djangorestframework-simplejwt>=5.5.1",
 ]
 
+[tool.setuptools]
+packages = []
+
 
 
 [dependency-groups]
@@ -29,6 +36,7 @@ dev = [
     "ruff",
     "python-dotenv",
     "pre-commit",
+    "django-debug-toolbar",
 ]
 prod = [
     "gunicorn",
