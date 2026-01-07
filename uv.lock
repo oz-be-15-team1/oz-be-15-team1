@@ -30,7 +30,9 @@ dependencies = [
     { name = "djangorestframework" },
     { name = "drf-spectacular" },
     { name = "pillow" },
+    { name = "pre-commit" },
     { name = "psycopg", extra = ["binary"] },
+    { name = "ruff" },
 ]
 
 [package.dev-dependencies]
@@ -50,7 +52,9 @@ requires-dist = [
     { name = "djangorestframework" },
     { name = "drf-spectacular" },
     { name = "pillow" },
+    { name = "pre-commit", specifier = ">=4.5.1" },
     { name = "psycopg", extras = ["binary"] },
+    { name = "ruff", specifier = ">=0.14.10" },
 ]
 
 [package.metadata.requires-dev]
