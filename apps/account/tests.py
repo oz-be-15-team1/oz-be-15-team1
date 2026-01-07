@@ -111,8 +111,8 @@ class AccountAPITests(APITestCase):
         self.assertEqual(response.data["id"], self.account.id)
         self.assertEqual(response.data["name"], "Main Account")
 
-    # 계좌 부분 수정(PATCH)이 적용되는지 확인
-    def test_partial_update_account_updates_fields(self):
+    # 계좌 부분 수정(PATCH)이 차단되는지 확인
+    def test_partial_update_account_not_allowed(self):
         # 상세 엔드포인트 URL 생성
         url = reverse("accounts-detail", args=[self.account.id])
         # 수정할 필드 페이로드
@@ -124,14 +124,11 @@ class AccountAPITests(APITestCase):
         # PATCH 요청 수행
         response = self.client.patch(url, payload, format="json")
 
-        # 200 응답과 필드 변경 여부 확인
-        self.assertEqual(response.status_code, 200)
-        self.account.refresh_from_db()
-        self.assertEqual(self.account.name, "Updated Account Name")
-        self.assertEqual(self.account.balance, Decimal("1500.00"))
+        # 405 Method Not Allowed 응답 확인
+        self.assertEqual(response.status_code, 405)
 
-    # 전체 수정(PUT)이 적용되는지 확인
-    def test_full_update_account(self):
+    # 전체 수정(PUT)이 차단되는지 확인
+    def test_full_update_account_not_allowed(self):
         # 상세 엔드포인트 URL 생성
         url = reverse("accounts-detail", args=[self.account.id])
         # 전체 필드 페이로드
@@ -146,12 +143,8 @@ class AccountAPITests(APITestCase):
         # PUT 요청 수행
         response = self.client.put(url, payload, format="json")
 
-        # 200 응답과 모든 필드 변경 여부 확인
-        self.assertEqual(response.status_code, 200)
-        self.account.refresh_from_db()
-        self.assertEqual(self.account.name, "Completely New Account")
-        self.assertEqual(self.account.source_type, "card")
-        self.assertEqual(self.account.balance, Decimal("2000.00"))
+        # 405 Method Not Allowed 응답 확인
+        self.assertEqual(response.status_code, 405)
 
     # 계좌 삭제가 가능한지 확인
     def test_delete_account(self):

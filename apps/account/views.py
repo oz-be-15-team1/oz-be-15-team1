@@ -29,6 +29,17 @@ class AccountViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+    def create(self, request, *args, **kwargs):
+        # 생성 요청 시리얼라이저로 유효성 검사
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # 생성 수행
+        self.perform_create(serializer)
+        # 응답은 AccountResponseSerializer 사용
+        instance = serializer.instance
+        response_serializer = AccountResponseSerializer(instance)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
     # update/partial_update 호출 시 명시적 예외 반환(필수X)
     def update(self, request, *args, **kwargs):
         raise MethodNotAllowed("PUT")
