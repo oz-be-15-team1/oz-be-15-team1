@@ -10,6 +10,5 @@ urlpatterns = [
     path("api/notification/", include("apps.notification.urls")),
     path("api/accounts/", include("apps.account.urls")),
     path("api/transactions/", include("apps.transaction.urls")),
-    path("api/", include("apps.category.urls")),
-    path("api/", include("apps.tag.urls")),
+    path("api/users/", include("apps.members.urls")),
 ]
