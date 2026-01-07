@@ -1,14 +1,17 @@
 from .base import *  # noqa
+import sys
 
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
-# django-debug-toolbar 설정
-INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405
+# django-debug-toolbar 설정 (테스트 실행 시 비활성화)
+TESTING = "test" in sys.argv
 
-MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
-] + MIDDLEWARE  # noqa: F405
+if not TESTING:
+    INSTALLED_APPS += ["debug_toolbar"]  # noqa: F405
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ] + MIDDLEWARE  # noqa: F405
 
 # django-debug-toolbar를 표시할 IP 주소 설정
 INTERNAL_IPS = [
@@ -26,4 +29,3 @@ INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in ips]
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,  # noqa: F405
 }
-
