@@ -1,8 +1,9 @@
 # trashcan/services.py
 from typing import Type
+
 from django.db import models
 from django.utils import timezone
-from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.exceptions import NotFound
 
 
 class TrashService:

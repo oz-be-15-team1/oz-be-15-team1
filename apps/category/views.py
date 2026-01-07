@@ -3,13 +3,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.trashcan.services import TrashService
+from apps.trashcan.views import RestoreAPIView, TrashListAPIView
+
+from .models import Category
 from .repositories import CategoryRepository
 from .serializers import CategoryCreateUpdateSerializer, CategoryReadSerializer
-from .models import Category
-
-from apps.trashcan.services import TrashService
-from apps.trashcan.views import TrashListAPIView, RestoreAPIView
-
 
 
 class CategoryListCreateView(APIView):

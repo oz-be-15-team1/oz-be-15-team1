@@ -1,10 +1,10 @@
 from django.urls import path
 
 from .views import (
-    CategoryListCreateView,
     CategoryDetailView,
-    CategoryTrashListView,
+    CategoryListCreateView,
     CategoryRestoreView,
+    CategoryTrashListView,
 )
 
 urlpatterns = [

@@ -3,12 +3,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.trashcan.services import TrashService
+from apps.trashcan.views import RestoreAPIView, TrashListAPIView
+
+from .models import Tag
 from .repositories import TagRepository
 from .serializers import TagCreateUpdateSerializer, TagReadSerializer
-from .models import Tag
-
-from apps.trashcan.services import TrashService
-from apps.trashcan.views import TrashListAPIView, RestoreAPIView
 
 
 class TagListCreateView(APIView):
