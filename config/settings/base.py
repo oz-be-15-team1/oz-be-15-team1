@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "apps.tag.apps.TagConfig",
 ]
 
+AUTH_USER_MODEL = "members.User"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

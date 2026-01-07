@@ -18,14 +18,12 @@ class TransactionAPITests(APITestCase):
             email="user@example.com",
             password="testpass123",
             name="Test User",
-            nickname="tester",
         )
         # 다른 사용자 생성
         self.other_user = User.objects.create_user(
             email="other@example.com",
             password="testpass123",
             name="Other User",
-            nickname="other",
         )
 
         # 기본 사용자의 계좌 생성

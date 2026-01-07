@@ -14,7 +14,7 @@ from .models import Analysis
 class AnalysisModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="test@example.com", password="testpass123", name="Test User", nickname="testuser"
+            email="test@example.com", password="testpass123", name="Test User"
         )
 
     def test_analysis_creation(self):
@@ -47,13 +47,12 @@ class AnalysisModelTest(TestCase):
 class AnalysisAPITest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            email="api@example.com", password="apitest123", name="API User", nickname="apiuser"
+            email="api@example.com", password="apitest123", name="API User"
         )
         self.other_user = User.objects.create_user(
             email="other@example.com",
             password="othertest123",
             name="Other User",
-            nickname="otheruser",
         )
         self.client.force_authenticate(user=self.user)
 
@@ -160,7 +159,6 @@ class AnalyzerTest(TestCase):
             email="analyzer@example.com",
             password="testpass123",
             name="Analyzer User",
-            nickname="analyzer",
         )
         from apps.account.models import Account
 
