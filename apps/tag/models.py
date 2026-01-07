@@ -1,12 +1,20 @@
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 
 class Tag(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="tags",
+        null=True,
+        blank=True,
+    )
     name = models.CharField(max_length=50)
+    color = models.CharField(max_length=20, blank=True, default="")
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     def soft_delete(self):
@@ -19,5 +27,5 @@ class Tag(models.Model):
             self.deleted_at = None
             self.save(update_fields=["deleted_at"])
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.name

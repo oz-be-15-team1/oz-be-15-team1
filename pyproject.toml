@@ -18,6 +18,7 @@ dependencies = [
     "Pillow",
     "redis",
     "ruff>=0.14.10",
+    "gunicorn",
 ]
 
 
