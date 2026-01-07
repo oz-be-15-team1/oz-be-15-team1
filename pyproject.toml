@@ -15,11 +15,12 @@ dependencies = [
     "pandas",
     "pre-commit>=4.5.1",
     "psycopg[binary]",
-    "Pillow",
+    "pillow",
     "redis",
     "ruff>=0.14.10",
     "gunicorn",
     "djangorestframework-simplejwt>=5.5.1",
+    "python-dotenv>=1.2.1",
 ]
 
 
