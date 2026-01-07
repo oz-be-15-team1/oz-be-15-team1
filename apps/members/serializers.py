@@ -23,7 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSignupResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", "nickname", "phone"]
+        fields = ["id", "email", "name", "nickname"]
 
 
 # 사용자 로그인 요청 데이터 스펙 (Request Body)
