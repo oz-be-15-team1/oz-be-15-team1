@@ -7,7 +7,6 @@ router = DefaultRouter()
 router.register(r"notifications", views.NotificationViewSet)
 
 urlpatterns = [
-    path("", include(router.urls)),
     path(
         "notifications/unread/",
         views.UnreadNotificationListView.as_view(),
@@ -18,4 +17,5 @@ urlpatterns = [
         views.NotificationMarkReadView.as_view(),
         name="notification-mark-read",
     ),
+    path("", include(router.urls)),
 ]

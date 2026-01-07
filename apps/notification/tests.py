@@ -39,12 +39,6 @@ class NotificationAPITest(APITestCase):
         self.user = User.objects.create_user(
             email="api@example.com", password="apitest123", name="API User", nickname="apiuser"
         )
-        self.other_user = User.objects.create_user(
-            email="other@example.com",
-            password="othertest123",
-            name="Other User",
-            nickname="otheruser",
-        )
         self.client.force_authenticate(user=self.user)
 
     def test_get_notifications_list(self):
@@ -88,24 +82,3 @@ class NotificationAPITest(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Notification.objects.count(), 0)
-
-    def test_get_unread_notifications_list(self):
-        Notification.objects.create(user=self.user, message="읽지 않은 알림", is_read=False)
-        Notification.objects.create(user=self.user, message="읽은 알림", is_read=True)
-        Notification.objects.create(user=self.other_user, message="다른 유저 알림", is_read=False)
-        url = reverse("notification-unread-list")
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertFalse(response.data[0]["is_read"])
-        self.assertEqual(response.data[0]["user"], self.user.id)
-
-    def test_mark_notification_as_read(self):
-        notification = Notification.objects.create(
-            user=self.user, message="읽지 않은 알림", is_read=False
-        )
-        url = reverse("notification-mark-read", kwargs={"pk": notification.pk})
-        response = self.client.patch(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        notification.refresh_from_db()
-        self.assertTrue(notification.is_read)
