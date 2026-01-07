@@ -56,6 +56,38 @@ class AnalysisAPITest(APITestCase):
         )
         self.client.force_authenticate(user=self.user)
 
+    def test_get_analysis_list_by_period_type(self):
+        Analysis.objects.create(
+            user=self.user,
+            about="total_expense",
+            type="weekly",
+            period_start="2024-01-01",
+            period_end="2024-01-07",
+            description="주간 분석",
+        )
+        Analysis.objects.create(
+            user=self.user,
+            about="total_income",
+            type="monthly",
+            period_start="2024-01-01",
+            period_end="2024-01-31",
+            description="월간 분석",
+        )
+        Analysis.objects.create(
+            user=self.other_user,
+            about="category_expense",
+            type="weekly",
+            period_start="2024-01-01",
+            period_end="2024-01-07",
+            description="다른 유저 주간 분석",
+        )
+        url = reverse("analysis-period-list")
+        response = self.client.get(url, {"type": "weekly"})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["type"], "weekly")
+        self.assertEqual(response.data[0]["user"], self.user.id)
+
     def test_get_analyses_list(self):
         url = reverse("analysis-list")
         response = self.client.get(url)
@@ -119,38 +151,6 @@ class AnalysisAPITest(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Analysis.objects.count(), 0)
-
-    def test_get_analysis_list_by_period_type(self):
-        Analysis.objects.create(
-            user=self.user,
-            about="total_expense",
-            type="weekly",
-            period_start="2024-01-01",
-            period_end="2024-01-07",
-            description="주간 분석",
-        )
-        Analysis.objects.create(
-            user=self.user,
-            about="total_income",
-            type="monthly",
-            period_start="2024-01-01",
-            period_end="2024-01-31",
-            description="월간 분석",
-        )
-        Analysis.objects.create(
-            user=self.other_user,
-            about="category_expense",
-            type="weekly",
-            period_start="2024-01-01",
-            period_end="2024-01-07",
-            description="다른 유저 주간 분석",
-        )
-        url = reverse("analysis-period-list")
-        response = self.client.get(url, {"type": "weekly"})
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]["type"], "weekly")
-        self.assertEqual(response.data[0]["user"], self.user.id)
 
 
 class AnalyzerTest(TestCase):
