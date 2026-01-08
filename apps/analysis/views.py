@@ -18,6 +18,7 @@ class AnalysisViewSet(viewsets.ModelViewSet):
 
     인증: JWT Bearer 토큰 필요
     """
+
     queryset = Analysis.objects.all()
     serializer_class = AnalysisSerializer
 
@@ -55,6 +56,7 @@ class AnalysisListView(generics.ListAPIView):
 
     인증: JWT Bearer 토큰 필요
     """
+
     serializer_class = AnalysisSerializer
 
     def get_queryset(self):
@@ -68,6 +70,12 @@ class AnalysisListView(generics.ListAPIView):
 
 
 class AnalysisRunView(APIView):
+    """
+    분석 실행 요청 API
+
+    분석 유형과 기간 정보를 받아 비동기 분석 작업을 시작합니다.
+    """
+
     def post(self, request):
         analysis_type = request.data.get("about")
         period_type = request.data.get("type")
@@ -91,6 +99,12 @@ class AnalysisRunView(APIView):
 
 
 class AnalysisTaskStatusView(APIView):
+    """
+    분석 작업 상태 조회 API
+
+    Celery task_id 기준으로 작업 상태를 조회합니다.
+    """
+
     def get(self, request, task_id):
         task = TaskResult.objects.filter(task_id=task_id).first()
         if not task:

@@ -15,6 +15,10 @@ import matplotlib.pyplot as plt
 
 
 class Analyzer:
+    """
+    거래 데이터 기반 분석기.
+    """
+
     def __init__(self, user):
         self.user = user
 

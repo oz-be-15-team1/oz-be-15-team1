@@ -4,6 +4,10 @@ from apps.members.models import User
 
 
 class Notification(models.Model):
+    """
+    사용자 알림 모델.
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications")
     message = models.TextField()
     is_read = models.BooleanField(default=False)
