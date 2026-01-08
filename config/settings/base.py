@@ -117,6 +117,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -127,6 +128,11 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,  # Token 재발급
     "BLACKLIST_AFTER_ROTATION": True,  # Refresh Token 블랙리스트
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "BUDGET API",
+    "VERSION": "1.0.0",
 }
 
 # bubget

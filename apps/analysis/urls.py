@@ -4,9 +4,9 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r"analyses", views.AnalysisViewSet)
+router.register(r"", views.AnalysisViewSet, basename="analysis")
 
 urlpatterns = [
-    path("analyses/period/", views.AnalysisListView.as_view(), name="analysis-period-list"),
+    path("period/", views.AnalysisListView.as_view(), name="analysis-period-list"),
     path("", include(router.urls)),
 ]

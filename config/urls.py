@@ -40,8 +40,8 @@ urlpatterns = [
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     # API 엔드포인트
-    path("api/analysis/", include("apps.analysis.urls")),
-    path("api/notification/", include("apps.notification.urls")),
+    path("api/analyses/", include("apps.analysis.urls")),
+    path("api/notifications/", include("apps.notification.urls")),
     path("api/accounts/", include("apps.account.urls")),
     path("api/transactions/", include("apps.transaction.urls")),
     path("api/users/", include("apps.members.urls")),
