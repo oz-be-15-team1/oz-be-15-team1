@@ -12,7 +12,6 @@ class AccountCreateRequestSerializer(serializers.ModelSerializer):
             "source_type",
             "balance",
             "account_number",
-            "bank_code",
             "account_type",
             "card_company",
             "card_number",
@@ -31,7 +30,6 @@ class AccountResponseSerializer(serializers.ModelSerializer):
             "balance",
             "is_active",
             "account_number",
-            "bank_code",
             "account_type",
             "card_company",
             "card_number",
@@ -47,7 +45,6 @@ class AccountUpdateRequestSerializer(serializers.Serializer):
     balance = serializers.DecimalField(max_digits=14, decimal_places=2, required=False)
     is_active = serializers.BooleanField(required=False)
     account_number = serializers.CharField(required=False, allow_blank=True)
-    bank_code = serializers.CharField(required=False, allow_blank=True)
     account_type = serializers.CharField(required=False, allow_blank=True)
     card_company = serializers.CharField(required=False, allow_blank=True)
     card_number = serializers.CharField(required=False, allow_blank=True)

@@ -168,7 +168,6 @@ class AnalyzerTest(TestCase):
             source_type="bank",
             balance=1000000,
             account_number="123-456-789",
-            bank_code="001",
         )
         from apps.transaction.models import Transaction
 

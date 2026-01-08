@@ -19,7 +19,6 @@ class Account(models.Model):
     is_active = models.BooleanField(default=True)
 
     account_number = models.CharField(max_length=32, blank=True)
-    bank_code = models.CharField(max_length=20, blank=True)
     account_type = models.CharField(max_length=30, blank=True)
 
     card_company = models.CharField(max_length=30, blank=True)
