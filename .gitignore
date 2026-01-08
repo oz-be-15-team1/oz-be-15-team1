@@ -403,3 +403,5 @@ pyrightconfig.json
 .env.local
 .env.docker
 frontend/node_modules/
+.vscode/
+.vite/
