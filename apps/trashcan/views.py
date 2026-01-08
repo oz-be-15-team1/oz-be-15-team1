@@ -11,6 +11,7 @@ class TrashListAPIView(APIView):
     GET /<resource>/trash/
     하위 클래스에서 model, serializer_class 지정하면 됨.
     """
+
     permission_classes = [IsAuthenticated]
     model: type[models.Model] = None
     serializer_class = None
@@ -26,6 +27,7 @@ class RestoreAPIView(APIView):
     POST /<resource>/{id}/restore/
     하위 클래스에서 model 지정하면 됨.
     """
+
     permission_classes = [IsAuthenticated]
     model: type[models.Model] = None
     id_field = "id"

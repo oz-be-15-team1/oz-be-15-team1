@@ -50,5 +50,6 @@ class TagTrashListView(TrashListAPIView):
     model = Tag
     serializer_class = TagReadSerializer
 
+
 class TagRestoreView(RestoreAPIView):
     model = Tag

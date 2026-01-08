@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,52 +14,124 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Budget',
+            name="Budget",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('period_start', models.DateField()),
-                ('period_end', models.DateField()),
-                ('amount_limit', models.DecimalField(decimal_places=2, max_digits=14)),
-                ('scope_type', models.CharField(choices=[('ALL', 'All'), ('ACCOUNT', 'Account'), ('CATEGORY', 'Category'), ('TAG', 'Tag')], max_length=20)),
-                ('scope_ref_id', models.BigIntegerField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-                ('user', models.ForeignKey(db_column='user_id', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("period_start", models.DateField()),
+                ("period_end", models.DateField()),
+                ("amount_limit", models.DecimalField(decimal_places=2, max_digits=14)),
+                (
+                    "scope_type",
+                    models.CharField(
+                        choices=[
+                            ("ALL", "All"),
+                            ("ACCOUNT", "Account"),
+                            ("CATEGORY", "Category"),
+                            ("TAG", "Tag"),
+                        ],
+                        max_length=20,
+                    ),
+                ),
+                ("scope_ref_id", models.BigIntegerField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("deleted_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        db_column="user_id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'budgets',
+                "db_table": "budgets",
             },
         ),
         migrations.CreateModel(
-            name='BudgetAlertRule',
+            name="BudgetAlertRule",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('threshold_type', models.CharField(choices=[('PERCENT', 'Percent'), ('AMOUNT', 'Amount')], max_length=20)),
-                ('threshold_value', models.DecimalField(decimal_places=2, max_digits=14)),
-                ('is_enabled', models.BooleanField(default=True)),
-                ('last_triggered_at', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('budget', models.ForeignKey(db_column='budget_id', on_delete=django.db.models.deletion.CASCADE, related_name='alert_rules', to='budget.budget')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "threshold_type",
+                    models.CharField(
+                        choices=[("PERCENT", "Percent"), ("AMOUNT", "Amount")], max_length=20
+                    ),
+                ),
+                ("threshold_value", models.DecimalField(decimal_places=2, max_digits=14)),
+                ("is_enabled", models.BooleanField(default=True)),
+                ("last_triggered_at", models.DateTimeField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "budget",
+                    models.ForeignKey(
+                        db_column="budget_id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="alert_rules",
+                        to="budget.budget",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'budget_alert_rules',
+                "db_table": "budget_alert_rules",
             },
         ),
         migrations.CreateModel(
-            name='BudgetAlertEvent',
+            name="BudgetAlertEvent",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('spent', models.DecimalField(decimal_places=2, max_digits=14)),
-                ('budget_limit', models.DecimalField(decimal_places=2, max_digits=14)),
-                ('triggered_at', models.DateTimeField(auto_now_add=True)),
-                ('budget', models.ForeignKey(db_column='budget_id', on_delete=django.db.models.deletion.CASCADE, to='budget.budget')),
-                ('user', models.ForeignKey(db_column='user_id', on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('rule', models.ForeignKey(db_column='rule_id', on_delete=django.db.models.deletion.CASCADE, to='budget.budgetalertrule')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("spent", models.DecimalField(decimal_places=2, max_digits=14)),
+                ("budget_limit", models.DecimalField(decimal_places=2, max_digits=14)),
+                ("triggered_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "budget",
+                    models.ForeignKey(
+                        db_column="budget_id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="budget.budget",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        db_column="user_id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "rule",
+                    models.ForeignKey(
+                        db_column="rule_id",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="budget.budgetalertrule",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'budget_alert_events',
-                'indexes': [models.Index(fields=['user', 'budget', 'rule', 'triggered_at'], name='budget_aler_user_id_0eaf51_idx')],
+                "db_table": "budget_alert_events",
+                "indexes": [
+                    models.Index(
+                        fields=["user", "budget", "rule", "triggered_at"],
+                        name="budget_aler_user_id_0eaf51_idx",
+                    )
+                ],
             },
         ),
     ]

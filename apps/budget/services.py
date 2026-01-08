@@ -51,7 +51,11 @@ def _tx_date(tx) -> Optional[timezone.datetime.date]:
         if transacted_on is None:
             return None
         # transacted_on이 date일 수도, datetime일 수도 있으니 안전 처리
-        return transacted_on if hasattr(transacted_on, "year") and not hasattr(transacted_on, "date") else transacted_on.date()
+        return (
+            transacted_on
+            if hasattr(transacted_on, "year") and not hasattr(transacted_on, "date")
+            else transacted_on.date()
+        )
 
     # occurred_at이 aware datetime이라면 .date() 가능
     return occurred_at.date()
@@ -93,10 +97,8 @@ def calculate_spent_for_budget(budget: Budget) -> Decimal:
             TransactionTag = _get_transaction_tag_model()
         except Exception:
             return Decimal("0")
-        tx_ids = (
-            TransactionTag.objects
-            .filter(tag_id=budget.scope_ref_id)
-            .values_list("transaction_id", flat=True)
+        tx_ids = TransactionTag.objects.filter(tag_id=budget.scope_ref_id).values_list(
+            "transaction_id", flat=True
         )
         qs = qs.filter(id__in=tx_ids)
 
@@ -170,16 +172,14 @@ def trigger_budget_alerts_for_transaction(tx) -> None:
 
 
 @transaction.atomic
-def _check_and_trigger_rules_atomic(*, budget: Budget, spent: Decimal, budget_limit: Decimal) -> None:
+def _check_and_trigger_rules_atomic(
+    *, budget: Budget, spent: Decimal, budget_limit: Decimal
+) -> None:
     """
     - 룰 row lock(select_for_update)으로 중복 알림 방지
     - last_triggered_at이 있으면 이미 트리거된 룰로 간주(현재 요구사항: 딱 1번만)
     """
-    rules = (
-        BudgetAlertRule.objects
-        .select_for_update()
-        .filter(budget_id=budget.id, is_enabled=True)
-    )
+    rules = BudgetAlertRule.objects.select_for_update().filter(budget_id=budget.id, is_enabled=True)
 
     now = timezone.now()
 
@@ -224,6 +224,7 @@ def _send_notification_safely(**payload) -> None:
     """
     try:
         from apps.notification import services as notif_services
+
         if hasattr(notif_services, "send_budget_alert"):
             notif_services.send_budget_alert(**payload)
     except Exception:

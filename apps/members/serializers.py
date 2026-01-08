@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "password", "name", 'phone']
+        fields = ["email", "password", "name", "phone"]
 
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -23,7 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSignupResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", 'phone']
+        fields = ["id", "email", "name", "phone"]
 
 
 # 사용자 로그인 요청 데이터 스펙 (Request Body)
@@ -38,17 +38,12 @@ class UserLoginResponseSerializer(serializers.Serializer):
     token = serializers.CharField()
 
 
-# 사용자 프로필 응답 데이터 스펙 (Response Body)
-class UserProfileResponseSerializer(serializers.ModelSerializer):
+# 회원정보 조회, 수정
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", "phone", "date_joined"]
-
-
-# 사용자 프로필 수정 요청 데이터 스펙 (Request Body)
-class UserProfileUpdateRequestSerializer(serializers.Serializer):
-    name = serializers.CharField(required=False)
-    phone = serializers.CharField(required=False, allow_blank=True)
+        fields = ["id", "email", "name", "phone"]
+        read_only_fields = ["id", "email"]
 
 
 """

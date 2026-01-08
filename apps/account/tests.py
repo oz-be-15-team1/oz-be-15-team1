@@ -66,7 +66,9 @@ class AccountAPITests(APITestCase):
         # 반환된 id 집합 계산
         returned_ids = {item["id"] for item in response.data}
         # DB에서 사용자 계좌 id 집합과 동일한지 검증
-        self.assertSetEqual(returned_ids, set(Account.objects.filter(user=self.user).values_list("id", flat=True)))
+        self.assertSetEqual(
+            returned_ids, set(Account.objects.filter(user=self.user).values_list("id", flat=True))
+        )
 
     # 계좌 생성 시 소유자 설정과 201 응답을 확인
     def test_create_account_sets_owner_and_returns_201(self):

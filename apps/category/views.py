@@ -45,9 +45,11 @@ class CategoryDetailView(APIView):
         TrashService.soft_delete(Category, request.user.id, category_id)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class CategoryTrashListView(TrashListAPIView):
     model = Category
     serializer_class = CategoryReadSerializer
+
 
 class CategoryRestoreView(RestoreAPIView):
     model = Category

@@ -19,7 +19,7 @@ urlpatterns = [
 # django-debug-toolbar URL 추가 (개발 환경에서만)
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
-
