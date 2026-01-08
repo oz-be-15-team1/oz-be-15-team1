@@ -4,7 +4,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-    ('category', '0001_initial'),
+    ("category", "0002_add_category_user"),
     migrations.swappable_dependency(settings.AUTH_USER_MODEL),
 ]
 
