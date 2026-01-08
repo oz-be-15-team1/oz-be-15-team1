@@ -181,6 +181,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
             method=validated["method"],
             description=validated.get("description"),
             occurred_at=validated["occurred_at"],
+            tags=validated.get("tags"),
         )
 
         # 생성된 거래를 응답용 시리얼라이저로 직렬화하여 반환
@@ -213,6 +214,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
         # 허용된 필드들만 업데이트
         for attr, val in validated.items():
+            if attr == "tags":
+                instance.tags.set(val)
+                continue
             setattr(instance, attr, val)
         instance.save()
 

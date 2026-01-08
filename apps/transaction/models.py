@@ -1,6 +1,7 @@
 from django.db import models
 
 from apps.account.models import Account
+from apps.tag.models import Tag
 
 
 class Transaction(models.Model):
@@ -19,6 +20,8 @@ class Transaction(models.Model):
     direction = models.CharField(max_length=10, choices=DIRECTION_CHOICES)
     method = models.CharField(max_length=20)
     description = models.CharField(max_length=255, blank=True)
+
+    tags = models.ManyToManyField(Tag, related_name="transactions", blank=True)
 
     occurred_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from decimal import Decimal
 
 import matplotlib
 import pandas as pd
@@ -55,7 +56,7 @@ class Analyzer:
         plt.xticks(rotation=45)
         plt.grid(True, alpha=0.3)
 
-        return plt, f"총 지출: {expense_df['amount'].sum():,}원"
+        return plt, f"총 지출: {self.format_currency(expense_df['amount'].sum())}"
 
     def analyze_total_income(self, df, start_date, end_date):
         income_df = df[df["direction"] == "income"]
@@ -69,7 +70,7 @@ class Analyzer:
         plt.xticks(rotation=45)
         plt.grid(True, alpha=0.3, axis="y")
 
-        return plt, f"총 수입: {income_df['amount'].sum():,}원"
+        return plt, f"총 수입: {self.format_currency(income_df['amount'].sum())}"
 
     def analyze_category_expense(self, df, start_date, end_date):
         expense_df = df[df["direction"] == "expense"]
@@ -79,7 +80,14 @@ class Analyzer:
         plt.pie(category_expense["amount"], labels=category_expense["method"], autopct="%1.1f%%")
         plt.title(f"카테고리별 지출 분석 ({start_date} ~ {end_date})")
 
-        return plt, "카테고리별 지출 분석 완료"
+        if category_expense.empty:
+            return plt, "카테고리별 지출 없음"
+
+        breakdown = ", ".join(
+            f"{row['method']}: {self.format_currency(row['amount'])}"
+            for _, row in category_expense.iterrows()
+        )
+        return plt, f"카테고리별 지출 - {breakdown}"
 
     def analyze_account_balance(self, df, start_date, end_date):
         latest_balances = (
@@ -99,7 +107,7 @@ class Analyzer:
         plt.xticks(rotation=45)
         plt.grid(True, alpha=0.3, axis="y")
 
-        return plt, f"총 잔액: {latest_balances['balance_after'].sum():,}원"
+        return plt, f"총 잔액: {self.format_currency(latest_balances['balance_after'].sum())}"
 
     def save_plot_image(self, plot, filename):
         image_path = os.path.join(settings.MEDIA_ROOT, "analysis_images", filename)
@@ -140,3 +148,11 @@ class Analyzer:
             description=description,
             result_image=image_path,
         )
+
+    @staticmethod
+    def format_currency(value):
+        if isinstance(value, Decimal):
+            value = int(value.quantize(Decimal("1")))
+        else:
+            value = int(round(value))
+        return f"{value:,}원"
