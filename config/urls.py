@@ -7,6 +7,7 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 # SWAGGER: Schema View 설정
 schema_view = get_schema_view(
@@ -20,20 +21,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
-    authentication_classes=[],
 )
-
-# SWAGGER: JWT 인증 설정 (중복 설정 - base.py에도 존재)
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-        }
-    },
-    "USE_SESSION_AUTH": False,
-}
 
 urlpatterns = [
     path("admin/", admin.site.urls),

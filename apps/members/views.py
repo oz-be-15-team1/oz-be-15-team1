@@ -18,34 +18,6 @@ from .serializers import (
 
 # 회원가입 view
 class UserSignupView(GenericAPIView):
-    """
-    회원가입 API
-
-    새로운 사용자 계정을 생성합니다.
-
-    요청 예시 (Request Body):
-    {
-        "email": "user@example.com",
-        "password": "securepassword123",
-        "username": "홍길동"
-    }
-
-    응답 예시 (Response):
-    {
-        "id": 1,
-        "email": "user@example.com",
-        "username": "홍길동",
-        "created_at": "2026-01-08T10:00:00Z"
-    }
-
-    상태 코드 (Status Codes):
-    - 201 Created: 회원가입 성공
-    - 400 Bad Request: 유효성 검증 실패 (필수 필드 누락, 이메일 형식 오류, 비밀번호 조건 미충족)
-    - 409 Conflict: 이미 존재하는 이메일
-
-    인증: 불필요
-    """
-
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -70,36 +42,6 @@ class UserSignupView(GenericAPIView):
 
 # 로그인 view
 class UserLoginView(GenericAPIView):
-    """
-    로그인 API
-
-    사용자 인증 후 JWT 액세스 토큰과 리프레시 토큰을 발급합니다.
-
-    요청 예시 (Request Body):
-    {
-        "email": "user@example.com",
-        "password": "securepassword123"
-    }
-
-    응답 예시 (Response):
-    {
-        "user": {
-            "id": 1,
-            "email": "user@example.com",
-            "username": "홍길동"
-        },
-        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    }
-
-    상태 코드 (Status Codes):
-    - 200 OK: 로그인 성공
-    - 400 Bad Request: 유효성 검증 실패 (필수 필드 누락)
-    - 401 Unauthorized: 이메일 또는 비밀번호 불일치
-
-    참고: 리프레시 토큰은 HttpOnly 쿠키로 설정됩니다.
-
-    인증: 불필요
-    """
 
     serializer_class = UserLoginRequestSerializer
     permission_classes = [permissions.AllowAny]
@@ -184,3 +126,34 @@ class UserProfileView(GenericAPIView):
         request.user.is_active = False
         request.user.save(update_fields=["is_active"])
         return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)
+    
+"""
+    로그인 API
+
+    사용자 인증 후 JWT 액세스 토큰과 리프레시 토큰을 발급합니다.
+
+    요청 예시 (Request Body):
+    {
+        "email": "user@example.com",
+        "password": "securepassword123"
+    }
+
+    응답 예시 (Response):
+    {
+        "user": {
+            "id": 1,
+            "email": "user@example.com",
+            "username": "홍길동"
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+
+    상태 코드 (Status Codes):
+    - 200 OK: 로그인 성공
+    - 400 Bad Request: 유효성 검증 실패 (필수 필드 누락)
+    - 401 Unauthorized: 이메일 또는 비밀번호 불일치
+
+    참고: 리프레시 토큰은 HttpOnly 쿠키로 설정됩니다.
+
+    인증: 불필요
+    """

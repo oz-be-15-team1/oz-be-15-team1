@@ -48,6 +48,16 @@ INSTALLED_APPS = [
     "apps.tag.apps.TagConfig",
 ]
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    }
+}
+
 AUTH_USER_MODEL = "members.User"
 
 MIDDLEWARE = [
