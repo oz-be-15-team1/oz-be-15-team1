@@ -14,6 +14,10 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -24,8 +28,6 @@ INSTALLED_APPS = [
     "rest_framework",
     # SWAGGER: API 문서화
     "drf_yasg",
-    # CORS
-    "corsheaders",
     # OWN APPS
     "apps.account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
@@ -36,8 +38,11 @@ INSTALLED_APPS = [
     "apps.notification.apps.NotificationConfig",
     "apps.trashcan.apps.TrashcanConfig",
     # 3rd PARTY APPS
+    "corsheaders",
     "rest_framework_simplejwt.token_blacklist",
     "django_extensions",
+    "django_celery_results",
+    "django_celery_beat",
     # category/tag
     "apps.category.apps.CategoryConfig",
     "apps.tag.apps.TagConfig",
@@ -47,8 +52,8 @@ AUTH_USER_MODEL = "members.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -117,6 +122,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -128,6 +134,19 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,  # Token 재발급
     "BLACKLIST_AFTER_ROTATION": True,  # Refresh Token 블랙리스트
 }
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "BUDGET API",
+    "VERSION": "1.0.0",
+}
+
+# Celery Configuration
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "django-db")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
 
 # bubget
 BUDGET_ALERT_DEDUP_MINUTES = 5

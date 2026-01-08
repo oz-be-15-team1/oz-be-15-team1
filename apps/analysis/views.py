@@ -1,9 +1,13 @@
+from django_celery_results.models import TaskResult
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import generics, viewsets
+from rest_framework import generics, status, viewsets
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Analysis
 from .serializers import AnalysisSerializer
+from .tasks import run_user_analysis
 
 
 class AnalysisViewSet(viewsets.ModelViewSet):
@@ -62,17 +66,40 @@ class AnalysisListView(generics.ListAPIView):
             queryset = queryset.filter(type=period_type)
         return queryset
 
-    @swagger_auto_schema(
-        operation_summary="분석 목록 필터링 조회",
-        operation_description="사용자와 기간 타입별로 분석 데이터를 필터링하여 조회합니다.",
-        manual_parameters=[
-            openapi.Parameter('type', openapi.IN_QUERY, description="기간 타입 (예: monthly, weekly)", type=openapi.TYPE_STRING),
-        ],
-        responses={
-            200: openapi.Response("분석 목록 조회 성공", AnalysisSerializer(many=True)),
-            401: "인증 실패",
-        },
-        tags=["분석 관리"],
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+
+class AnalysisRunView(APIView):
+    def post(self, request):
+        analysis_type = request.data.get("about")
+        period_type = request.data.get("type")
+        period_start = request.data.get("period_start")
+        period_end = request.data.get("period_end")
+
+        if not all([analysis_type, period_type, period_start, period_end]):
+            return Response(
+                {"detail": "about, type, period_start, period_end 값이 필요합니다."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        task = run_user_analysis.delay(
+            request.user.id,
+            analysis_type,
+            period_type,
+            period_start,
+            period_end,
+        )
+        return Response({"task_id": task.id}, status=status.HTTP_202_ACCEPTED)
+
+
+class AnalysisTaskStatusView(APIView):
+    def get(self, request, task_id):
+        task = TaskResult.objects.filter(task_id=task_id).first()
+        if not task:
+            return Response({"status": "PENDING"}, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "status": task.status,
+                "result": task.result,
+                "date_done": task.date_done,
+            },
+            status=status.HTTP_200_OK,
+        )

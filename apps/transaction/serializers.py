@@ -1,18 +1,24 @@
 from rest_framework import serializers
 
+from apps.tag.models import Tag
+from apps.tag.serializers import TagReadSerializer
+
 from .models import Transaction
 
 
 # 거래 생성 요청 데이터 스펙 (Request Body)
 class TransactionCreateRequestSerializer(serializers.ModelSerializer):
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True, required=False)
+
     class Meta:
         model = Transaction
-        fields = ["account", "amount", "direction", "method", "description", "occurred_at"]
+        fields = ["account", "amount", "direction", "method", "description", "occurred_at", "tags"]
 
 
 # 거래 응답 데이터 스펙 (Response Body)
 class TransactionResponseSerializer(serializers.ModelSerializer):
     account_name = serializers.CharField(source="account.name", read_only=True)
+    tags = TagReadSerializer(many=True, read_only=True)
 
     class Meta:
         model = Transaction
@@ -25,6 +31,7 @@ class TransactionResponseSerializer(serializers.ModelSerializer):
             "direction",
             "method",
             "description",
+            "tags",
             "occurred_at",
             "created_at",
             "updated_at",
@@ -38,6 +45,7 @@ class TransactionUpdateRequestSerializer(serializers.Serializer):
     method = serializers.CharField(required=False)
     description = serializers.CharField(required=False, allow_blank=True)
     occurred_at = serializers.DateTimeField(required=False)
+    tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True, required=False)
 
 
 """

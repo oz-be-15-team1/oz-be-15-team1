@@ -80,7 +80,6 @@ class AccountAPITests(APITestCase):
             "source_type": "bank",
             "balance": "300.50",
             "account_number": "321-654",
-            "bank_code": "001",
             "account_type": "checking",
         }
 

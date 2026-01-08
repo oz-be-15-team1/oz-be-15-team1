@@ -4,16 +4,16 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 router = DefaultRouter()
-router.register(r"notifications", views.NotificationViewSet)
+router.register(r"", views.NotificationViewSet, basename="notification")
 
 urlpatterns = [
     path(
-        "notifications/unread/",
+        "unread/",
         views.UnreadNotificationListView.as_view(),
         name="notification-unread-list",
     ),
     path(
-        "notifications/<int:pk>/read/",
+        "<int:pk>/read/",
         views.NotificationMarkReadView.as_view(),
         name="notification-mark-read",
     ),
