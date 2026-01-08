@@ -1,13 +1,15 @@
 from django.contrib.auth import authenticate
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.views import APIView
 
 from .serializers import (
     RegisterSerializer,
     UserLoginRequestSerializer,
     UserSignupResponseSerializer,
+    UserProfileSerializer
 )
 
 
@@ -57,3 +59,46 @@ class UserLoginView(GenericAPIView):
         )
 
         return response
+    
+# 로그아웃 view
+class UserLogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        refresh_token = request.data.get("refresh")
+        if not refresh_token:
+            return Response({"detail": "Refresh token required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception:
+            return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
+    
+class UserProfileView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserProfileSerializer
+
+    def get(self, request):
+        # 본인 프로필 조회
+        serializer = self.get_serializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request):
+        # 본인 프로필 일부 수정
+        serializer = self.get_serializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request):
+        # 본인 계정 삭제
+        request.user.delete()
+        return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)
+

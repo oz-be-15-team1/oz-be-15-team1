@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "apps.notification.apps.NotificationConfig",
     "apps.trashcan.apps.TrashcanConfig",
     # 3rd PARTY APPS
+    "rest_framework_simplejwt.token_blacklist",
     "django_extensions",
     # category/tag
     "apps.category.apps.CategoryConfig",
@@ -122,7 +123,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),   # Token 유효기간
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,                    # Token 재발급
-    'BLACKLIST_AFTER_ROTATION': True,                 # Refresh Token 블랙리스트
+    'BLACKLIST_AFTER_ROTATION': True,                 # Refresh Token 블랙리스트 활성화
 }
 
 SPECTACULAR_SETTINGS = {
