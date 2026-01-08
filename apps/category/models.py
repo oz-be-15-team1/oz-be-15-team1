@@ -9,12 +9,12 @@ class Category(models.Model):
         EXPENSE = "EXPENSE", "EXPENSE"
 
     user = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.CASCADE,
-    related_name="categories",
-    null=True,
-    blank=True,
-)
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="categories",
+        null=True,
+        blank=True,
+    )
     parent = models.ForeignKey(
         "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="children"
     )
@@ -45,4 +45,3 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
-

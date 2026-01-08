@@ -9,6 +9,7 @@ class TrashableModel(models.Model):
     - deleted_at 이 NULL이면 정상
     - deleted_at 이 값 있으면 휴지통
     """
+
     deleted_at = models.DateTimeField(null=True, blank=True, db_index=True)
     deleted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,

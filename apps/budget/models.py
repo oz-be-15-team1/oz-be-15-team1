@@ -15,7 +15,9 @@ class ThresholdType(models.TextChoices):
 
 
 class Budget(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column="user_id")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column="user_id"
+    )
     name = models.CharField(max_length=255)
     period_start = models.DateField()
     period_end = models.DateField()
@@ -31,7 +33,9 @@ class Budget(models.Model):
 
 
 class BudgetAlertRule(models.Model):
-    budget = models.ForeignKey(Budget, on_delete=models.CASCADE, db_column="budget_id", related_name="alert_rules")
+    budget = models.ForeignKey(
+        Budget, on_delete=models.CASCADE, db_column="budget_id", related_name="alert_rules"
+    )
     threshold_type = models.CharField(max_length=20, choices=ThresholdType.choices)
     threshold_value = models.DecimalField(max_digits=14, decimal_places=2)
     is_enabled = models.BooleanField(default=True)
@@ -46,7 +50,10 @@ class BudgetAlertEvent(models.Model):
     """
     "알림을 보냈다" 기록(중복 방지 + 알림 목록에 쓰기 좋음)
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column="user_id")
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, db_column="user_id"
+    )
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE, db_column="budget_id")
     rule = models.ForeignKey(BudgetAlertRule, on_delete=models.CASCADE, db_column="rule_id")
 

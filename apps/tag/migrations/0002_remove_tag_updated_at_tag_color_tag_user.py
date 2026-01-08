@@ -6,25 +6,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tag', '0001_initial'),
+        ("tag", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='tag',
-            name='updated_at',
+            model_name="tag",
+            name="updated_at",
         ),
         migrations.AddField(
-            model_name='tag',
-            name='color',
-            field=models.CharField(blank=True, default='', max_length=20),
+            model_name="tag",
+            name="color",
+            field=models.CharField(blank=True, default="", max_length=20),
         ),
         migrations.AddField(
-            model_name='tag',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tags', to=settings.AUTH_USER_MODEL),
+            model_name="tag",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="tags",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

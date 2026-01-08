@@ -1,4 +1,3 @@
-
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
@@ -10,14 +9,14 @@ from .serializers import AccountCreateRequestSerializer, AccountResponseSerializ
 class AccountViewSet(viewsets.ModelViewSet):
     # 모든 요청에 인증 필요
     permission_classes = [permissions.IsAuthenticated]
-    
+
     # 계좌 정보는 생성 이후 수정 불가: PUT/PATCH 차단
     http_method_names = ["get", "post", "delete", "head", "options"]
 
     # 사용자는 본인의 계좌만 조회/생성 가능
     def get_queryset(self):
         # select_related로 user 정보를 한 번에 가져와 N+1 문제 해결
-        return Account.objects.select_related('user').filter(user=self.request.user)
+        return Account.objects.select_related("user").filter(user=self.request.user)
 
     # 생성 동작일 때 특정 시리얼라이저 사용
     def get_serializer_class(self):
@@ -52,4 +51,3 @@ class AccountViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
