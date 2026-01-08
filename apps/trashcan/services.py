@@ -50,7 +50,7 @@ class TrashService:
             raise NotFound("Not found.")
 
         # deleted_at이 NULL인 경우만 삭제 처리 (중복 호출 방지)
-        updated = qs.filter(deleted_at__isnull=True).update(deleted_at=timezone.now())
+        qs.filter(deleted_at__isnull=True).update(deleted_at=timezone.now())
 
         # 리턴 타입 유지: 기존처럼 obj 반환
         # (상태가 이미 deleted였든 방금 deleted됐든 최종 상태를 반환)
@@ -68,6 +68,6 @@ class TrashService:
             raise NotFound("Not found.")
 
         # deleted_at이 NOT NULL인 경우만 복구 처리
-        updated = qs.filter(deleted_at__isnull=False).update(deleted_at=None)
+        qs.filter(deleted_at__isnull=False).update(deleted_at=None)
 
         return qs.first()
