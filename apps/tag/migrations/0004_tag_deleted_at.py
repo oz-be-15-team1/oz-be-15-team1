@@ -6,8 +6,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tag', '0003_remove_tag_deleted_at_alter_tag_user'),
-    ]
+    ('tag', '0002_remove_tag_updated_at_tag_color_tag_user'),
+]
 
     operations = [
         migrations.AddField(
