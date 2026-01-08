@@ -9,9 +9,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name="tag",
-            name="deleted_at",
-            field=models.DateTimeField(blank=True, null=True),
+        migrations.SeparateDatabaseAndState(
+            database_operations=[
+                migrations.RunSQL(
+                    sql="ALTER TABLE tag_tag ADD COLUMN IF NOT EXISTS deleted_at timestamp with time zone",
+                    reverse_sql="ALTER TABLE tag_tag DROP COLUMN IF EXISTS deleted_at",
+                )
+            ],
+            state_operations=[
+                migrations.AddField(
+                    model_name="tag",
+                    name="deleted_at",
+                    field=models.DateTimeField(blank=True, null=True),
+                )
+            ],
         ),
     ]
