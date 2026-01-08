@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "password", "name", 'phone']
+        fields = ["email", "password", "name", "phone"]
 
     def create(self, validated_data):
         password = validated_data.pop("password")
@@ -23,7 +23,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSignupResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "email", "name", 'phone']
+        fields = ["id", "email", "name", "phone"]
 
 
 # 사용자 로그인 요청 데이터 스펙 (Request Body)
@@ -42,8 +42,8 @@ class UserLoginResponseSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'name', 'phone']
-        read_only_fields = ['id', 'email']
+        fields = ["id", "email", "name", "phone"]
+        read_only_fields = ["id", "email"]
 
 
 """

@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+
 from rest_framework import status, permissions
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -9,7 +10,7 @@ from .serializers import (
     RegisterSerializer,
     UserLoginRequestSerializer,
     UserSignupResponseSerializer,
-    UserProfileSerializer
+    UserProfileSerializer,
 )
 
 
@@ -24,6 +25,7 @@ class UserSignupView(GenericAPIView):
 
         response_data = UserSignupResponseSerializer(user).data
         return Response(response_data, status=status.HTTP_201_CREATED)
+
 
 # 로그인 view
 class UserLoginView(GenericAPIView):
@@ -43,10 +45,7 @@ class UserLoginView(GenericAPIView):
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
-        response_data = {
-            "user": UserSignupResponseSerializer(user).data,
-            "token": access_token
-        }
+        response_data = {"user": UserSignupResponseSerializer(user).data, "token": access_token}
 
         response = Response(response_data, status=status.HTTP_200_OK)
         response.set_cookie(
@@ -55,11 +54,12 @@ class UserLoginView(GenericAPIView):
             httponly=True,
             secure=True,
             samesite="Lax",
-            max_age=7*24*60*60
+            max_age=7 * 24 * 60 * 60,
         )
 
         return response
-    
+
+
 # 로그아웃 view
 class UserLogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -67,7 +67,9 @@ class UserLogoutView(APIView):
     def post(self, request):
         refresh_token = request.data.get("refresh")
         if not refresh_token:
-            return Response({"detail": "Refresh token required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "Refresh token required"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
             token = RefreshToken(refresh_token)
@@ -76,7 +78,8 @@ class UserLogoutView(APIView):
             return Response({"detail": "Invalid token"}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"detail": "Logout successful"}, status=status.HTTP_200_OK)
-    
+
+
 class UserProfileView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserProfileSerializer
@@ -88,11 +91,7 @@ class UserProfileView(GenericAPIView):
 
     def patch(self, request):
         # 본인 프로필 일부 수정
-        serializer = self.get_serializer(
-            request.user,
-            data=request.data,
-            partial=True
-        )
+        serializer = self.get_serializer(request.user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -101,4 +100,3 @@ class UserProfileView(GenericAPIView):
         # 본인 계정 삭제
         request.user.delete()
         return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)
-
