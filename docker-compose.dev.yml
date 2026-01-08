@@ -14,15 +14,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+
   web:
     build: .
     command: /scripts/run.sh
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "8000:8000"
     depends_on:
       - db
+      - redis
     volumes:
       - .:/app
       - /app/.venv
