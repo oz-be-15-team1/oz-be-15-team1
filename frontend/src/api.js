@@ -27,7 +27,8 @@ export const apiFetch = async (path, options = {}) => {
     ...(options.headers || {}),
   };
 
-  if (token) {
+  const useAuth = options.auth !== false;
+  if (useAuth && token) {
     headers.Authorization = `Bearer ${token}`;
   }
 

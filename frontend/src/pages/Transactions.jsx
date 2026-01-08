@@ -14,7 +14,17 @@ const initialForm = {
 export default function TransactionsPage() {
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [categoryMode, setCategoryMode] = useState("select");
+  const [customMethod, setCustomMethod] = useState("");
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [editingTx, setEditingTx] = useState(null);
+  const [editForm, setEditForm] = useState(initialForm);
+  const [editCategoryMode, setEditCategoryMode] = useState("select");
+  const [editCustomMethod, setEditCustomMethod] = useState("");
+  const [editTags, setEditTags] = useState([]);
   const [filters, setFilters] = useState({ account: "", direction: "" });
   const [message, setMessage] = useState("");
 
@@ -37,24 +47,51 @@ export default function TransactionsPage() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const data = await apiFetch("/categories/");
+      setCategories(data);
+    } catch (error) {
+      setMessage(`카테고리 불러오기 실패: ${error.message}`);
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const data = await apiFetch("/tags/");
+      setTags(data);
+    } catch (error) {
+      setMessage(`태그 불러오기 실패: ${error.message}`);
+    }
+  };
+
   useEffect(() => {
     fetchAccounts();
     fetchTransactions();
+    fetchCategories();
+    fetchTags();
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
     try {
+      const method =
+        categoryMode === "custom" ? customMethod.trim() : form.method;
       await apiFetch("/transactions/", {
         method: "POST",
         body: cleanPayload({
           ...form,
           amount: form.amount ? Number(form.amount) : form.amount,
           account: form.account ? Number(form.account) : form.account,
+          method,
+          tags: selectedTags,
         }),
       });
       setForm(initialForm);
+      setCategoryMode("select");
+      setCustomMethod("");
+      setSelectedTags([]);
       fetchTransactions();
     } catch (error) {
       setMessage(`거래 등록 실패: ${error.message}`);
@@ -68,6 +105,54 @@ export default function TransactionsPage() {
       fetchTransactions();
     } catch (error) {
       setMessage(`거래 삭제 실패: ${error.message}`);
+    }
+  };
+
+  const startEdit = (tx) => {
+    setEditingTx(tx);
+    setEditForm({
+      account: String(tx.account),
+      amount: String(tx.amount),
+      direction: tx.direction,
+      method: tx.method || "",
+      description: tx.description || "",
+      occurred_at: tx.occurred_at ? tx.occurred_at.slice(0, 16) : "",
+    });
+    const inCategories = categories.some((category) => category.name === tx.method);
+    setEditCategoryMode(inCategories ? "select" : "custom");
+    setEditCustomMethod(inCategories ? "" : tx.method || "");
+    setEditTags((tx.tags || []).map((tag) => tag.id));
+  };
+
+  const cancelEdit = () => {
+    setEditingTx(null);
+    setEditForm(initialForm);
+    setEditCategoryMode("select");
+    setEditCustomMethod("");
+    setEditTags([]);
+  };
+
+  const handleEditSubmit = async (event) => {
+    event.preventDefault();
+    if (!editingTx) return;
+    setMessage("");
+    try {
+      const method =
+        editCategoryMode === "custom" ? editCustomMethod.trim() : editForm.method;
+      await apiFetch(`/transactions/${editingTx.id}/`, {
+        method: "PATCH",
+        body: cleanPayload({
+          ...editForm,
+          amount: editForm.amount ? Number(editForm.amount) : editForm.amount,
+          account: editForm.account ? Number(editForm.account) : editForm.account,
+          method,
+          tags: editTags,
+        }),
+      });
+      cancelEdit();
+      fetchTransactions();
+    } catch (error) {
+      setMessage(`거래 수정 실패: ${error.message}`);
     }
   };
 
@@ -121,10 +206,16 @@ export default function TransactionsPage() {
                 <div>
                   <strong>{tx.description || tx.method}</strong>
                   <span>{tx.account_name}</span>
+                  {tx.tags?.length ? (
+                    <span>{tx.tags.map((tag) => tag.name).join(", ")}</span>
+                  ) : null}
                 </div>
                 <div className="list-meta">
                   <span className={`pill ${tx.direction}`}>{tx.direction}</span>
                   <span>{Number(tx.amount).toLocaleString()}원</span>
+                  <button className="ghost" type="button" onClick={() => startEdit(tx)}>
+                    수정
+                  </button>
                   <button className="ghost" type="button" onClick={() => handleDelete(tx.id)}>
                     삭제
                   </button>
@@ -174,11 +265,57 @@ export default function TransactionsPage() {
           </label>
           <label>
             카테고리/방법
-            <input
-              value={form.method}
-              onChange={(event) => setForm({ ...form, method: event.target.value })}
-              required
-            />
+            <select
+              value={categoryMode === "custom" ? "__custom__" : form.method}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value === "__custom__") {
+                  setCategoryMode("custom");
+                  setForm({ ...form, method: "" });
+                } else {
+                  setCategoryMode("select");
+                  setForm({ ...form, method: value });
+                }
+              }}
+              required={categoryMode !== "custom"}
+            >
+              <option value="">선택</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+              <option value="__custom__">직접 입력</option>
+            </select>
+          </label>
+          {categoryMode === "custom" && (
+            <label>
+              직접 입력
+              <input
+                value={customMethod}
+                onChange={(event) => setCustomMethod(event.target.value)}
+                required
+              />
+            </label>
+          )}
+          <label>
+            태그
+            <select
+              multiple
+              value={selectedTags.map(String)}
+              onChange={(event) => {
+                const values = Array.from(event.target.selectedOptions).map((option) =>
+                  Number(option.value)
+                );
+                setSelectedTags(values);
+              }}
+            >
+              {tags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
           </label>
           <label>
             설명
@@ -199,6 +336,123 @@ export default function TransactionsPage() {
           <button type="submit">등록하기</button>
         </form>
       </div>
+
+      {editingTx && (
+        <form className="card form" onSubmit={handleEditSubmit}>
+          <div className="card-header">
+            <h3>거래 수정</h3>
+            <button type="button" className="ghost" onClick={cancelEdit}>
+              닫기
+            </button>
+          </div>
+          <label>
+            계좌
+            <select
+              value={editForm.account}
+              onChange={(event) => setEditForm({ ...editForm, account: event.target.value })}
+              required
+            >
+              <option value="">계좌 선택</option>
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            금액
+            <input
+              type="number"
+              value={editForm.amount}
+              onChange={(event) => setEditForm({ ...editForm, amount: event.target.value })}
+              required
+            />
+          </label>
+          <label>
+            구분
+            <select
+              value={editForm.direction}
+              onChange={(event) => setEditForm({ ...editForm, direction: event.target.value })}
+            >
+              <option value="expense">지출</option>
+              <option value="income">수입</option>
+              <option value="transfer">이체</option>
+            </select>
+          </label>
+          <label>
+            카테고리/방법
+            <select
+              value={editCategoryMode === "custom" ? "__custom__" : editForm.method}
+              onChange={(event) => {
+                const value = event.target.value;
+                if (value === "__custom__") {
+                  setEditCategoryMode("custom");
+                  setEditForm({ ...editForm, method: "" });
+                } else {
+                  setEditCategoryMode("select");
+                  setEditForm({ ...editForm, method: value });
+                }
+              }}
+              required={editCategoryMode !== "custom"}
+            >
+              <option value="">선택</option>
+              {categories.map((category) => (
+                <option key={category.id} value={category.name}>
+                  {category.name}
+                </option>
+              ))}
+              <option value="__custom__">직접 입력</option>
+            </select>
+          </label>
+          {editCategoryMode === "custom" && (
+            <label>
+              직접 입력
+              <input
+                value={editCustomMethod}
+                onChange={(event) => setEditCustomMethod(event.target.value)}
+                required
+              />
+            </label>
+          )}
+          <label>
+            태그
+            <select
+              multiple
+              value={editTags.map(String)}
+              onChange={(event) => {
+                const values = Array.from(event.target.selectedOptions).map((option) =>
+                  Number(option.value)
+                );
+                setEditTags(values);
+              }}
+            >
+              {tags.map((tag) => (
+                <option key={tag.id} value={tag.id}>
+                  {tag.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            설명
+            <input
+              value={editForm.description}
+              onChange={(event) => setEditForm({ ...editForm, description: event.target.value })}
+            />
+          </label>
+          <label>
+            발생일시
+            <input
+              type="datetime-local"
+              value={editForm.occurred_at}
+              onChange={(event) => setEditForm({ ...editForm, occurred_at: event.target.value })}
+              required
+            />
+          </label>
+          <button type="submit">수정 저장</button>
+        </form>
+      )}
     </section>
   );
 }

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, Route, Routes } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard.jsx";
@@ -22,7 +23,7 @@ const navItems = [
 ];
 
 export default function App() {
-  const token = getToken();
+  const [token, setTokenState] = useState(getToken());
 
   return (
     <div className="app-shell">
@@ -53,7 +54,7 @@ export default function App() {
               className="ghost"
               onClick={() => {
                 clearToken();
-                window.location.reload();
+                setTokenState(null);
               }}
             >
               로그아웃
@@ -72,7 +73,7 @@ export default function App() {
       <main className="main">
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/auth" element={<AuthPage onLogin={setTokenState} />} />
           <Route path="/accounts" element={<AccountsPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
           <Route path="/categories" element={<CategoriesPage />} />

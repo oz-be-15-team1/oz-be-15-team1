@@ -7,7 +7,6 @@ const initialForm = {
   source_type: "bank",
   balance: "",
   account_number: "",
-  bank_code: "",
   account_type: "",
   card_company: "",
   card_number: "",
@@ -18,6 +17,8 @@ export default function AccountsPage() {
   const [accounts, setAccounts] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [message, setMessage] = useState("");
+  const isBank = form.source_type === "bank";
+  const isCard = form.source_type === "card";
 
   const fetchAccounts = async () => {
     try {
@@ -42,6 +43,11 @@ export default function AccountsPage() {
           ...form,
           balance: form.balance ? Number(form.balance) : form.balance,
           billing_day: form.billing_day ? Number(form.billing_day) : form.billing_day,
+          account_number: isBank ? form.account_number : undefined,
+          account_type: isBank ? form.account_type : undefined,
+          card_company: isCard ? form.card_company : undefined,
+          card_number: isCard ? form.card_number : undefined,
+          billing_day: isCard ? form.billing_day : undefined,
         }),
       });
       setForm(initialForm);
@@ -66,7 +72,7 @@ export default function AccountsPage() {
       <header className="page-header">
         <div>
           <h2>계좌 관리</h2>
-          <p>은행/카드/현금 계좌를 깔끔하게 정리해요.</p>
+          <p>은행/카드 계좌를 깔끔하게 정리해요.</p>
         </div>
         <span className="bubble">💳 반짝 계좌</span>
       </header>
@@ -113,7 +119,6 @@ export default function AccountsPage() {
             >
               <option value="bank">은행</option>
               <option value="card">카드</option>
-              <option value="cash">현금</option>
             </select>
           </label>
           <label>
@@ -125,35 +130,58 @@ export default function AccountsPage() {
               required
             />
           </label>
-          <label>
-            계좌 번호
-            <input
-              value={form.account_number}
-              onChange={(event) => setForm({ ...form, account_number: event.target.value })}
-            />
-          </label>
-          <label>
-            은행 코드
-            <input
-              value={form.bank_code}
-              onChange={(event) => setForm({ ...form, bank_code: event.target.value })}
-            />
-          </label>
-          <label>
-            카드사
-            <input
-              value={form.card_company}
-              onChange={(event) => setForm({ ...form, card_company: event.target.value })}
-            />
-          </label>
-          <label>
-            결제일
-            <input
-              type="number"
-              value={form.billing_day}
-              onChange={(event) => setForm({ ...form, billing_day: event.target.value })}
-            />
-          </label>
+          {isBank && (
+            <>
+              <label>
+                계좌 번호
+                <input
+                  value={form.account_number}
+                  onChange={(event) => setForm({ ...form, account_number: event.target.value })}
+                />
+              </label>
+              <label>
+                계좌 유형
+                <select
+                  value={form.account_type}
+                  onChange={(event) => setForm({ ...form, account_type: event.target.value })}
+                >
+                  <option value="">선택</option>
+                  <option value="checking">보통예금(입출금)</option>
+                  <option value="savings">자유저축(적금)</option>
+                  <option value="fixed_deposit">정기예금</option>
+                  <option value="overdraft">마이너스통장</option>
+                  <option value="housing">주택청약</option>
+                  <option value="foreign">외화예금</option>
+                </select>
+              </label>
+            </>
+          )}
+          {isCard && (
+            <>
+              <label>
+                카드사
+                <input
+                  value={form.card_company}
+                  onChange={(event) => setForm({ ...form, card_company: event.target.value })}
+                />
+              </label>
+              <label>
+                카드 번호
+                <input
+                  value={form.card_number}
+                  onChange={(event) => setForm({ ...form, card_number: event.target.value })}
+                />
+              </label>
+              <label>
+                결제일
+                <input
+                  type="number"
+                  value={form.billing_day}
+                  onChange={(event) => setForm({ ...form, billing_day: event.target.value })}
+                />
+              </label>
+            </>
+          )}
           <button type="submit">저장하기</button>
         </form>
       </div>

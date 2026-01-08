@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { apiFetch, setToken } from "../api.js";
 
-export default function AuthPage() {
+export default function AuthPage({ onLogin }) {
   const [signup, setSignup] = useState({
     email: "",
     password: "",
@@ -20,6 +20,7 @@ export default function AuthPage() {
       await apiFetch("/users/signup/", {
         method: "POST",
         body: signup,
+        auth: false,
       });
       setMessage("회원가입 완료! 이제 로그인해 주세요.");
       setSignup({ email: "", password: "", name: "", nickname: "", phone: "" });
@@ -35,8 +36,12 @@ export default function AuthPage() {
       const data = await apiFetch("/users/login/", {
         method: "POST",
         body: login,
+        auth: false,
       });
       setToken(data.token);
+      if (onLogin) {
+        onLogin(data.token);
+      }
       setMessage(`환영합니다, ${data.user.nickname || data.user.name}!`);
       setLogin({ email: "", password: "" });
     } catch (error) {

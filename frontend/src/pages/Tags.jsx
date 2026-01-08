@@ -118,9 +118,9 @@ export default function TagsPage() {
           <label>
             컬러
             <input
-              value={form.color}
+              type="color"
+              value={form.color || "#ffb3c7"}
               onChange={(event) => setForm({ ...form, color: event.target.value })}
-              placeholder="#ffb3c7"
             />
           </label>
           <button type="submit">추가하기</button>
