@@ -25,6 +25,7 @@ services:
       - db
     volumes:
       - .:/app
+      - /app/.venv
 
 volumes:
   postgres_data:

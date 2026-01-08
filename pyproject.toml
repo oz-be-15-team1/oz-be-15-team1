@@ -12,9 +12,11 @@ dependencies = [
     "django",
     "django-celery-beat",
     "django-celery-results",
+    "django-cors-headers",
     "django-extensions>=4.1",
     "djangorestframework",
-    "drf-spectacular",
+    # SWAGGER: API 문서화 라이브러리
+    "drf-yasg",
     "matplotlib",
     "pandas",
     "pre-commit>=4.5.1",

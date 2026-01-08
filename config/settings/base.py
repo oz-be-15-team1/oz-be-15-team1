@@ -22,7 +22,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "drf_spectacular",
+    # SWAGGER: API 문서화
+    "drf_yasg",
+    # CORS
+    "corsheaders",
     # OWN APPS
     "apps.account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
@@ -44,6 +47,7 @@ AUTH_USER_MODEL = "members.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -113,7 +117,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
@@ -123,12 +126,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # Token 유효기간
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,  # Token 재발급
-    "BLACKLIST_AFTER_ROTATION": True,  # Refresh Token 블랙리스트 활성화
-}
-
-SPECTACULAR_SETTINGS = {
-    "TITLE": "BUDGET API",
-    "VERSION": "1.0.0",
+    "BLACKLIST_AFTER_ROTATION": True,  # Refresh Token 블랙리스트
 }
 
 # bubget

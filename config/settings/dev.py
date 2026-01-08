@@ -4,6 +4,10 @@ import sys
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+# CORS 설정 (개발 환경)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
 # django-debug-toolbar 설정 (테스트 실행 시 비활성화)
 TESTING = "test" in sys.argv
 

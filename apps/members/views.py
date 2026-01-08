@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -8,6 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import (
     RegisterSerializer,
     UserLoginRequestSerializer,
+    UserLoginResponseSerializer,
     UserProfileSerializer,
     UserSignupResponseSerializer,
 )
@@ -15,8 +18,47 @@ from .serializers import (
 
 # 회원가입 view
 class UserSignupView(GenericAPIView):
-    serializer_class = RegisterSerializer
+    """
+    회원가입 API
 
+    새로운 사용자 계정을 생성합니다.
+
+    요청 예시 (Request Body):
+    {
+        "email": "user@example.com",
+        "password": "securepassword123",
+        "username": "홍길동"
+    }
+
+    응답 예시 (Response):
+    {
+        "id": 1,
+        "email": "user@example.com",
+        "username": "홍길동",
+        "created_at": "2026-01-08T10:00:00Z"
+    }
+
+    상태 코드 (Status Codes):
+    - 201 Created: 회원가입 성공
+    - 400 Bad Request: 유효성 검증 실패 (필수 필드 누락, 이메일 형식 오류, 비밀번호 조건 미충족)
+    - 409 Conflict: 이미 존재하는 이메일
+
+    인증: 불필요
+    """
+
+    serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(
+        operation_summary="회원가입",
+        operation_description="새로운 사용자 계정을 생성합니다.",
+        request_body=RegisterSerializer,
+        responses={
+            201: openapi.Response("회원가입 성공", UserSignupResponseSerializer),
+            400: "유효성 검증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)  # 유효성 검증
@@ -28,8 +70,50 @@ class UserSignupView(GenericAPIView):
 
 # 로그인 view
 class UserLoginView(GenericAPIView):
-    serializer_class = UserLoginRequestSerializer
+    """
+    로그인 API
 
+    사용자 인증 후 JWT 액세스 토큰과 리프레시 토큰을 발급합니다.
+
+    요청 예시 (Request Body):
+    {
+        "email": "user@example.com",
+        "password": "securepassword123"
+    }
+
+    응답 예시 (Response):
+    {
+        "user": {
+            "id": 1,
+            "email": "user@example.com",
+            "username": "홍길동"
+        },
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+
+    상태 코드 (Status Codes):
+    - 200 OK: 로그인 성공
+    - 400 Bad Request: 유효성 검증 실패 (필수 필드 누락)
+    - 401 Unauthorized: 이메일 또는 비밀번호 불일치
+
+    참고: 리프레시 토큰은 HttpOnly 쿠키로 설정됩니다.
+
+    인증: 불필요
+    """
+
+    serializer_class = UserLoginRequestSerializer
+    permission_classes = [permissions.AllowAny]
+
+    @swagger_auto_schema(
+        operation_summary="로그인",
+        operation_description="사용자 인증 후 JWT 액세스 토큰과 리프레시 토큰을 발급합니다.",
+        request_body=UserLoginRequestSerializer,
+        responses={
+            200: openapi.Response("로그인 성공", UserLoginResponseSerializer),
+            401: "이메일 또는 비밀번호 불일치",
+        },
+        tags=["회원 관리"],
+    )
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
