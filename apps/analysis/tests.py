@@ -12,6 +12,10 @@ from .models import Analysis
 
 
 class AnalysisModelTest(TestCase):
+    """
+    Analysis 모델 동작 테스트.
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="test@example.com", password="testpass123", name="Test User"
@@ -45,6 +49,10 @@ class AnalysisModelTest(TestCase):
 
 
 class AnalysisAPITest(APITestCase):
+    """
+    Analysis API 동작 테스트.
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="api@example.com", password="apitest123", name="API User"
@@ -154,6 +162,10 @@ class AnalysisAPITest(APITestCase):
 
 
 class AnalyzerTest(TestCase):
+    """
+    Analyzer 동작 테스트.
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="analyzer@example.com",

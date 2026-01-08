@@ -4,6 +4,10 @@ from apps.members.models import User
 
 
 class Analysis(models.Model):
+    """
+    사용자 분석 결과 모델.
+    """
+
     ANALYSIS_TYPE_CHOICES = [
         ("weekly", "매주"),
         ("monthly", "매월"),

@@ -9,6 +9,10 @@ from .models import Notification
 
 
 class NotificationModelTest(TestCase):
+    """
+    Notification 모델 동작 테스트.
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="test@example.com", password="testpass123", name="Test User"
@@ -35,6 +39,10 @@ class NotificationModelTest(TestCase):
 
 
 class NotificationAPITest(APITestCase):
+    """
+    Notification API 동작 테스트.
+    """
+
     def setUp(self):
         self.user = User.objects.create_user(
             email="api@example.com", password="apitest123", name="API User"

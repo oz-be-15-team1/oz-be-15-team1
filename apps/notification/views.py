@@ -17,6 +17,7 @@ class NotificationViewSet(viewsets.ModelViewSet):
 
     인증: JWT Bearer 토큰 필요
     """
+
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
 
@@ -54,6 +55,7 @@ class UnreadNotificationListView(generics.ListAPIView):
 
     인증: JWT Bearer 토큰 필요
     """
+
     serializer_class = NotificationSerializer
 
     def get_queryset(self):
@@ -63,7 +65,9 @@ class UnreadNotificationListView(generics.ListAPIView):
         operation_summary="읽지 않은 알림 목록 조회",
         operation_description="사용자의 읽지 않은 알림만 조회합니다.",
         responses={
-            200: openapi.Response("읽지 않은 알림 목록 조회 성공", NotificationSerializer(many=True)),
+            200: openapi.Response(
+                "읽지 않은 알림 목록 조회 성공", NotificationSerializer(many=True)
+            ),
             401: "인증 실패",
         },
         tags=["알림 관리"],
