@@ -3,7 +3,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("tag", "0004_add_tag_deleted_at"),
+        ("tag", "0002_remove_tag_updated_at_tag_color_tag_user"),
         ("transaction", "0001_initial"),
     ]
 

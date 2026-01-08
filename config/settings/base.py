@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     "rest_framework",
     # SWAGGER: API 문서화
     "drf_yasg",
-    # CORS
-    "corsheaders",
     # OWN APPS
     "apps.account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
@@ -54,7 +52,6 @@ AUTH_USER_MODEL = "members.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
