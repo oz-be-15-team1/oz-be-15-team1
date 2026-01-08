@@ -1,6 +1,6 @@
+from django.apps import apps
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.apps import apps
 
 from .services import trigger_budget_alerts_for_transaction
 
