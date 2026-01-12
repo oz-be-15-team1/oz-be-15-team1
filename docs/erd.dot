@@ -1,6 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2026-01-12 14:43
+  // Created: 2026-01-12 18:23
   // Cli Options: -a -g --dot
 
   fontname = "Roboto"
@@ -326,11 +326,37 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
+    apps_trashcan_models_TrashableModel [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      TrashableModel
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>deleted_by</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (None)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">deleted_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
     apps_account_models_Account [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Account
+      Account<BR/>&lt;<FONT FACE="Roboto"><I>TrashableModel</I></FONT>&gt;
       </B></FONT></TD></TR>
     
     
@@ -338,6 +364,14 @@ digraph model_graph {
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>deleted_by</B></I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>ForeignKey (id)</B></I></FONT>
       </TD></TR>
     
     
@@ -402,6 +436,14 @@ digraph model_graph {
       <FONT COLOR="#7B7B7B" FACE="Roboto">created_at</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>deleted_at</I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
       </TD></TR>
     
     
@@ -600,11 +642,37 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
+    apps_trashcan_models_TrashableModel [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      TrashableModel
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>deleted_by</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (None)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">deleted_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
     apps_transaction_models_Transaction [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Transaction
+      Transaction<BR/>&lt;<FONT FACE="Roboto"><I>TrashableModel</I></FONT>&gt;
       </B></FONT></TD></TR>
     
     
@@ -620,6 +688,14 @@ digraph model_graph {
       <FONT FACE="Roboto"><B>account</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>deleted_by</B></I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>ForeignKey (id)</B></I></FONT>
       </TD></TR>
     
     
@@ -644,6 +720,14 @@ digraph model_graph {
       <FONT COLOR="#7B7B7B" FACE="Roboto">created_at</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>deleted_at</I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
       </TD></TR>
     
     
@@ -940,11 +1024,37 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
+    apps_trashcan_models_TrashableModel [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      TrashableModel
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>deleted_by</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (None)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">deleted_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
     apps_analysis_models_Analysis [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Analysis
+      Analysis<BR/>&lt;<FONT FACE="Roboto"><I>TrashableModel</I></FONT>&gt;
       </B></FONT></TD></TR>
     
     
@@ -952,6 +1062,14 @@ digraph model_graph {
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>deleted_by</B></I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>ForeignKey (id)</B></I></FONT>
       </TD></TR>
     
     
@@ -976,6 +1094,14 @@ digraph model_graph {
       <FONT COLOR="#7B7B7B" FACE="Roboto">created_at</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>deleted_at</I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
       </TD></TR>
     
     
@@ -1044,11 +1170,37 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
+    apps_trashcan_models_TrashableModel [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      TrashableModel
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>deleted_by</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (None)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">deleted_at</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
     apps_notification_models_Notification [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      Notification
+      Notification<BR/>&lt;<FONT FACE="Roboto"><I>TrashableModel</I></FONT>&gt;
       </B></FONT></TD></TR>
     
     
@@ -1056,6 +1208,14 @@ digraph model_graph {
       <FONT FACE="Roboto"><B>id</B></FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>deleted_by</B></I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I><B>ForeignKey (id)</B></I></FONT>
       </TD></TR>
     
     
@@ -1072,6 +1232,14 @@ digraph model_graph {
       <FONT COLOR="#7B7B7B" FACE="Roboto">created_at</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>deleted_at</I></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><I>DateTimeField</I></FONT>
       </TD></TR>
     
     
@@ -2046,19 +2214,37 @@ digraph model_graph {
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
+  apps_trashcan_models_TrashableModel -> apps_members_models_User
+  [label=" deleted_by (deleted_%(class)s_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_account_models_Account -> apps_members_models_User
+  [label=" deleted_by (deleted_account_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
   apps_account_models_Account -> apps_members_models_User
   [label=" user (accounts)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_account_models_Account -> apps_trashcan_models_TrashableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
   apps_members_models_User -> django_contrib_auth_base_user_AbstractBaseUser
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
+  apps_trashcan_models_TrashableModel -> apps_members_models_User
+  [label=" deleted_by (deleted_%(class)s_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_transaction_models_Transaction -> apps_members_models_User
+  [label=" deleted_by (deleted_transaction_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
   apps_transaction_models_Transaction -> apps_account_models_Account
   [label=" account (transactions)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   apps_transaction_models_Transaction -> apps_tag_models_Tag
   [label=" tags (transactions)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  apps_transaction_models_Transaction -> apps_trashcan_models_TrashableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
   apps_budget_models_Budget -> apps_members_models_User
@@ -2077,12 +2263,30 @@ digraph model_graph {
   [label=" rule (budgetalertevent)"] [arrowhead=none, arrowtail=dot, dir=both];
 
 
+  apps_trashcan_models_TrashableModel -> apps_members_models_User
+  [label=" deleted_by (deleted_%(class)s_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_analysis_models_Analysis -> apps_members_models_User
+  [label=" deleted_by (deleted_analysis_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
   apps_analysis_models_Analysis -> apps_members_models_User
   [label=" user (analyses)"] [arrowhead=none, arrowtail=dot, dir=both];
 
+  apps_analysis_models_Analysis -> apps_trashcan_models_TrashableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+
+  apps_trashcan_models_TrashableModel -> apps_members_models_User
+  [label=" deleted_by (deleted_%(class)s_set)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_notification_models_Notification -> apps_members_models_User
+  [label=" deleted_by (deleted_notification_set)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   apps_notification_models_Notification -> apps_members_models_User
   [label=" user (notifications)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  apps_notification_models_Notification -> apps_trashcan_models_TrashableModel
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
   rest_framework_simplejwt_token_blacklist_models_OutstandingToken -> apps_members_models_User
