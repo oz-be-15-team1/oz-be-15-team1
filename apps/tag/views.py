@@ -164,6 +164,31 @@ class TagTrashListView(TrashListAPIView):
     model = Tag
     serializer_class = TagReadSerializer
 
+    @swagger_auto_schema(
+        operation_summary="태그 휴지통 목록 조회",
+        operation_description="삭제된 태그 목록을 조회합니다.",
+        responses={
+            200: openapi.Response("휴지통 목록 조회 성공", TagReadSerializer(many=True)),
+            401: "인증 실패",
+        },
+        tags=["태그 관리"],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class TagRestoreView(RestoreAPIView):
     model = Tag
+
+    @swagger_auto_schema(
+        operation_summary="태그 복원",
+        operation_description="휴지통의 태그를 복원합니다.",
+        responses={
+            200: "태그 복원 성공",
+            401: "인증 실패",
+            404: "태그를 찾을 수 없음",
+        },
+        tags=["태그 관리"],
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
