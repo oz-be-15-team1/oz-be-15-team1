@@ -83,6 +83,17 @@ uv run celery -A budget worker -l info
 uv run celery -A budget beat -l info
 ```
 
+## Makefile 사용
+
+자주 쓰는 명령을 `make`로 실행할 수 있습니다.
+
+```bash
+make up
+make migrate
+make erd
+make frontend
+```
+
 ## API 문서
 
 - Swagger: `/swagger/`
