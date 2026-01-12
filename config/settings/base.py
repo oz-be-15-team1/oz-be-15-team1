@@ -55,16 +55,10 @@ INSTALLED_APPS = [
     "apps.tag.apps.TagConfig",
 ]
 
-SITE_ID = 1     # 우리 서비스 도메인
+SITE_ID = 1  # 우리 서비스 도메인
 
 SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        'Bearer': {
-            'type': 'apiKey',
-            'name': 'Authorization',
-            'in': 'header'
-        }
-    }
+    "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}}
 }
 
 AUTH_USER_MODEL = "members.User"
@@ -102,16 +96,16 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',      # Django 기본 인증
-    'allauth.account.auth_backends.AuthenticationBackend',  # allauth 인증 (이메일 로그인 + 소셜 로그인)
+    "django.contrib.auth.backends.ModelBackend",  # Django 기본 인증
+    "allauth.account.auth_backends.AuthenticationBackend",  # allauth 인증 (이메일 로그인 + 소셜 로그인)
 ]
 
 # allauth 기본 설정
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_VERIFICATION = "none"
+# ACCOUNT_AUTHENTICATION_METHOD = "email"
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # Redirect after login/logout
 LOGIN_REDIRECT_URL = "/"

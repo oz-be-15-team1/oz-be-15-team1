@@ -42,7 +42,6 @@ class UserSignupView(GenericAPIView):
 
 # 로그인 view
 class UserLoginView(GenericAPIView):
-
     serializer_class = UserLoginRequestSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -126,7 +125,8 @@ class UserProfileView(GenericAPIView):
         request.user.is_active = False
         request.user.save(update_fields=["is_active"])
         return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)
-    
+
+
 """
     로그인 API
 
