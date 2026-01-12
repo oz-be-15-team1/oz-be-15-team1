@@ -1,3 +1,4 @@
+name: oz-be-15-team1
 # 버전은 생략해도 된다고 합니다
 version: '3.9'
 
@@ -12,11 +13,13 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - oz-be-15-team1_db_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
     restart: always
+    volumes:
+      - oz-be-15-team1_redis_data:/data
 
   web:
     build: .
@@ -30,7 +33,7 @@ services:
       - redis
     volumes:
       - .:/app
-      - /app/.venv
+      - oz-be-15-team1_web_venv:/app/.venv
 
   frontend:
     image: node:20-alpine
@@ -44,4 +47,6 @@ services:
       - web
 
 volumes:
-  postgres_data:
+  oz-be-15-team1_db_data:
+  oz-be-15-team1_web_venv:
+  oz-be-15-team1_redis_data:
