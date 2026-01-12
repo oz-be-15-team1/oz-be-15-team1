@@ -25,7 +25,14 @@ export default function TransactionsPage() {
   const [editCategoryMode, setEditCategoryMode] = useState("select");
   const [editCustomMethod, setEditCustomMethod] = useState("");
   const [editTags, setEditTags] = useState([]);
-  const [filters, setFilters] = useState({ account: "", direction: "" });
+  const [filters, setFilters] = useState({
+    account: "",
+    direction: "",
+    min_amount: "",
+    max_amount: "",
+    start_date: "",
+    end_date: "",
+  });
   const [message, setMessage] = useState("");
 
   const fetchAccounts = async () => {
@@ -191,6 +198,28 @@ export default function TransactionsPage() {
             <option value="expense">지출</option>
             <option value="transfer">이체</option>
           </select>
+          <input
+            type="number"
+            placeholder="최소 금액"
+            value={filters.min_amount}
+            onChange={(event) => setFilters({ ...filters, min_amount: event.target.value })}
+          />
+          <input
+            type="number"
+            placeholder="최대 금액"
+            value={filters.max_amount}
+            onChange={(event) => setFilters({ ...filters, max_amount: event.target.value })}
+          />
+          <input
+            type="date"
+            value={filters.start_date}
+            onChange={(event) => setFilters({ ...filters, start_date: event.target.value })}
+          />
+          <input
+            type="date"
+            value={filters.end_date}
+            onChange={(event) => setFilters({ ...filters, end_date: event.target.value })}
+          />
           <button type="button" onClick={fetchTransactions}>
             적용하기
           </button>

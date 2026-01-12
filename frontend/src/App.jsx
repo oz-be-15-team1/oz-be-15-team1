@@ -9,6 +9,7 @@ import CategoriesPage from "./pages/Categories.jsx";
 import TagsPage from "./pages/Tags.jsx";
 import AnalysisPage from "./pages/Analysis.jsx";
 import NotificationsPage from "./pages/Notifications.jsx";
+import ProfilePage from "./pages/Profile.jsx";
 import { apiOrigin, clearToken, getToken } from "./api.js";
 
 const navItems = [
@@ -20,6 +21,7 @@ const navItems = [
   { to: "/tags", label: "태그" },
   { to: "/analysis", label: "분석" },
   { to: "/notifications", label: "알림" },
+  { to: "/profile", label: "프로필" },
 ];
 
 export default function App() {
@@ -62,7 +64,7 @@ export default function App() {
           )}
           <a
             className="docs"
-            href={apiOrigin ? `${apiOrigin}/api/docs/` : "/api/docs/"}
+            href={apiOrigin ? `${apiOrigin}/swagger/` : "/swagger/"}
             target="_blank"
             rel="noreferrer"
           >
@@ -80,6 +82,7 @@ export default function App() {
           <Route path="/tags" element={<TagsPage />} />
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/profile" element={<ProfilePage onLogout={setTokenState} />} />
         </Routes>
       </main>
     </div>

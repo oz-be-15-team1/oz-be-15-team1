@@ -7,7 +7,6 @@ export default function AuthPage({ onLogin }) {
     email: "",
     password: "",
     name: "",
-    nickname: "",
     phone: "",
   });
   const [login, setLogin] = useState({ email: "", password: "" });
@@ -19,11 +18,16 @@ export default function AuthPage({ onLogin }) {
     try {
       await apiFetch("/users/signup/", {
         method: "POST",
-        body: signup,
+        body: {
+          email: signup.email,
+          password: signup.password,
+          name: signup.name,
+          phone: signup.phone,
+        },
         auth: false,
       });
       setMessage("회원가입 완료! 이제 로그인해 주세요.");
-      setSignup({ email: "", password: "", name: "", nickname: "", phone: "" });
+      setSignup({ email: "", password: "", name: "", phone: "" });
     } catch (error) {
       setMessage(`회원가입 실패: ${error.message}`);
     }
@@ -42,7 +46,7 @@ export default function AuthPage({ onLogin }) {
       if (onLogin) {
         onLogin(data.token);
       }
-      setMessage(`환영합니다, ${data.user.nickname || data.user.name}!`);
+      setMessage(`환영합니다, ${data.user.name}!`);
       setLogin({ email: "", password: "" });
     } catch (error) {
       setMessage(`로그인 실패: ${error.message}`);
@@ -88,15 +92,6 @@ export default function AuthPage({ onLogin }) {
               type="text"
               value={signup.name}
               onChange={(event) => setSignup({ ...signup, name: event.target.value })}
-              required
-            />
-          </label>
-          <label>
-            닉네임
-            <input
-              type="text"
-              value={signup.nickname}
-              onChange={(event) => setSignup({ ...signup, nickname: event.target.value })}
               required
             />
           </label>

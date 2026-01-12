@@ -13,6 +13,8 @@ export default function CategoriesPage() {
   const [categories, setCategories] = useState([]);
   const [trash, setTrash] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState(initialForm);
   const [message, setMessage] = useState("");
 
   const fetchCategories = async () => {
@@ -67,6 +69,41 @@ export default function CategoriesPage() {
     }
   };
 
+  const startEdit = (category) => {
+    setEditingId(category.id);
+    setEditForm({
+      name: category.name || "",
+      kind: category.kind || "EXPENSE",
+      sort_order: String(category.sort_order ?? "0"),
+      parent: category.parent ? String(category.parent) : "",
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm(initialForm);
+  };
+
+  const handleEdit = async (event) => {
+    event.preventDefault();
+    if (!editingId) return;
+    setMessage("");
+    try {
+      await apiFetch(`/categories/${editingId}/`, {
+        method: "PATCH",
+        body: cleanPayload({
+          ...editForm,
+          sort_order: editForm.sort_order ? Number(editForm.sort_order) : undefined,
+          parent: editForm.parent ? Number(editForm.parent) : undefined,
+        }),
+      });
+      cancelEdit();
+      fetchCategories();
+    } catch (error) {
+      setMessage(`카테고리 수정 실패: ${error.message}`);
+    }
+  };
+
   const handleRestore = async (id) => {
     setMessage("");
     try {
@@ -102,6 +139,9 @@ export default function CategoriesPage() {
                 </div>
                 <div className="list-meta">
                   <span>정렬: {category.sort_order}</span>
+                  <button type="button" className="ghost" onClick={() => startEdit(category)}>
+                    수정
+                  </button>
                   <button className="ghost" type="button" onClick={() => handleDelete(category.id)}>
                     삭제
                   </button>
@@ -174,6 +214,52 @@ export default function CategoriesPage() {
           {!trash.length && <li className="empty">휴지통이 비어 있어요.</li>}
         </ul>
       </div>
+
+      {editingId && (
+        <form className="card form" onSubmit={handleEdit}>
+          <div className="card-header">
+            <h3>카테고리 수정</h3>
+            <button type="button" className="ghost" onClick={cancelEdit}>
+              닫기
+            </button>
+          </div>
+          <label>
+            이름
+            <input
+              value={editForm.name}
+              onChange={(event) => setEditForm({ ...editForm, name: event.target.value })}
+              required
+            />
+          </label>
+          <label>
+            종류
+            <select
+              value={editForm.kind}
+              onChange={(event) => setEditForm({ ...editForm, kind: event.target.value })}
+            >
+              <option value="EXPENSE">지출</option>
+              <option value="INCOME">수입</option>
+            </select>
+          </label>
+          <label>
+            정렬 순서
+            <input
+              type="number"
+              value={editForm.sort_order}
+              onChange={(event) => setEditForm({ ...editForm, sort_order: event.target.value })}
+            />
+          </label>
+          <label>
+            상위 카테고리 ID
+            <input
+              value={editForm.parent}
+              onChange={(event) => setEditForm({ ...editForm, parent: event.target.value })}
+              placeholder="선택 사항"
+            />
+          </label>
+          <button type="submit">수정 저장</button>
+        </form>
+      )}
     </section>
   );
 }
