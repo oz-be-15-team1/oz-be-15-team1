@@ -1,9 +1,10 @@
 from django.db import models
 
 from apps.members.models import User
+from apps.trashcan.models import TrashableModel
 
 
-class Account(models.Model):
+class Account(TrashableModel):
     id: int
     SOURCE_TYPE_CHOICES = [
         ("bank", "Bank"),

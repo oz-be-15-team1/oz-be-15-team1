@@ -1,9 +1,10 @@
 from django.db import models
 
 from apps.members.models import User
+from apps.trashcan.models import TrashableModel
 
 
-class Notification(models.Model):
+class Notification(TrashableModel):
     """
     사용자 알림 모델.
     """

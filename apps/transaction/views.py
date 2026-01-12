@@ -1,7 +1,9 @@
+from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
-from rest_framework.exceptions import MethodNotAllowed
+from rest_framework.decorators import action
+from rest_framework.exceptions import MethodNotAllowed, NotFound
 from rest_framework.response import Response
 
 from .models import Transaction
@@ -82,7 +84,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # select_related로 account와 user 정보를 한 번에 가져와 N+1 문제 해결
         qs = Transaction.objects.select_related("account", "account__user").filter(
-            account__user=self.request.user
+            account__user=self.request.user,
+            deleted_at__isnull=True,
         )
 
         # 필터링: account, direction, 금액 범위, 날짜 범위
@@ -123,12 +126,33 @@ class TransactionViewSet(viewsets.ModelViewSet):
         operation_summary="거래 목록 조회",
         operation_description="사용자의 모든 거래를 조회합니다. 계좌, 방향, 금액, 날짜 등으로 필터링할 수 있습니다.",
         manual_parameters=[
-            openapi.Parameter('account', openapi.IN_QUERY, description="계좌 ID", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('direction', openapi.IN_QUERY, description="거래 방향 (income/expense)", type=openapi.TYPE_STRING),
-            openapi.Parameter('min_amount', openapi.IN_QUERY, description="최소 금액", type=openapi.TYPE_NUMBER),
-            openapi.Parameter('max_amount', openapi.IN_QUERY, description="최대 금액", type=openapi.TYPE_NUMBER),
-            openapi.Parameter('start_date', openapi.IN_QUERY, description="시작 날짜 (YYYY-MM-DD)", type=openapi.TYPE_STRING),
-            openapi.Parameter('end_date', openapi.IN_QUERY, description="종료 날짜 (YYYY-MM-DD)", type=openapi.TYPE_STRING),
+            openapi.Parameter(
+                "account", openapi.IN_QUERY, description="계좌 ID", type=openapi.TYPE_INTEGER
+            ),
+            openapi.Parameter(
+                "direction",
+                openapi.IN_QUERY,
+                description="거래 방향 (income/expense)",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "min_amount", openapi.IN_QUERY, description="최소 금액", type=openapi.TYPE_NUMBER
+            ),
+            openapi.Parameter(
+                "max_amount", openapi.IN_QUERY, description="최대 금액", type=openapi.TYPE_NUMBER
+            ),
+            openapi.Parameter(
+                "start_date",
+                openapi.IN_QUERY,
+                description="시작 날짜 (YYYY-MM-DD)",
+                type=openapi.TYPE_STRING,
+            ),
+            openapi.Parameter(
+                "end_date",
+                openapi.IN_QUERY,
+                description="종료 날짜 (YYYY-MM-DD)",
+                type=openapi.TYPE_STRING,
+            ),
         ],
         responses={
             200: openapi.Response("거래 목록 조회 성공", TransactionResponseSerializer(many=True)),
@@ -237,5 +261,53 @@ class TransactionViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         # 객체를 조회하여 삭제하고 간단 메시지를 반환
         instance = self.get_object()
-        instance.delete()
+        Transaction.objects.filter(
+            id=instance.id,
+            account__user=request.user,
+            deleted_at__isnull=True,
+        ).update(deleted_at=timezone.now())
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @swagger_auto_schema(
+        operation_summary="거래 휴지통 목록 조회",
+        operation_description="삭제된(휴지통에 있는) 거래 목록을 조회합니다.",
+        responses={
+            200: openapi.Response(
+                "거래 휴지통 목록 조회 성공", TransactionResponseSerializer(many=True)
+            ),
+            401: "인증 실패",
+        },
+        tags=["거래 관리"],
+    )
+    @action(detail=False, methods=["get"], url_path="trash")
+    def trash(self, request, *args, **kwargs):
+        qs = Transaction.objects.select_related("account", "account__user").filter(
+            account__user=request.user,
+            deleted_at__isnull=False,
+        )
+        out = TransactionResponseSerializer(qs, many=True, context={"request": request})
+        return Response(out.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_summary="거래 복구",
+        operation_description="삭제된(휴지통에 있는) 거래를 복구합니다.",
+        responses={
+            200: openapi.Response("거래 복구 성공", TransactionResponseSerializer),
+            401: "인증 실패",
+            404: "거래를 찾을 수 없음",
+        },
+        tags=["거래 관리"],
+    )
+    @action(detail=True, methods=["post"], url_path="restore")
+    def restore(self, request, *args, **kwargs):
+        obj_id = kwargs.get("pk")
+        updated = Transaction.objects.filter(
+            id=obj_id,
+            account__user=request.user,
+            deleted_at__isnull=False,
+        ).update(deleted_at=None)
+        if updated == 0:
+            raise NotFound("Not found.")
+        instance = Transaction.objects.select_related("account", "account__user").get(id=obj_id)
+        out = TransactionResponseSerializer(instance, context={"request": request})
+        return Response(out.data, status=status.HTTP_200_OK)

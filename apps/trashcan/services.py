@@ -14,7 +14,7 @@ class TrashService:
     - user (ForeignKey) 또는 owner 같은 사용자 필드 (기본: user)
     """
 
-    user_field_name = "user" 
+    user_field_name = "user"
 
     @classmethod
     def _base_qs(cls, model: Type[models.Model], user_id: int):

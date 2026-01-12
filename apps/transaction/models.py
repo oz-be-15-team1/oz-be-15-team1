@@ -2,9 +2,10 @@ from django.db import models
 
 from apps.account.models import Account
 from apps.tag.models import Tag
+from apps.trashcan.models import TrashableModel
 
 
-class Transaction(models.Model):
+class Transaction(TrashableModel):
     id: int
     DIRECTION_CHOICES = [
         ("income", "Income"),

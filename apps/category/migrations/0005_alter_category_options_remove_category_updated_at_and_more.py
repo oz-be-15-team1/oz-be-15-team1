@@ -3,18 +3,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('category', '0004_alter_category_user'),
+        ("category", "0004_alter_category_user"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='category',
-            options={'ordering': ['sort_order', 'id']},
+            name="category",
+            options={"ordering": ["sort_order", "id"]},
         ),
-
         # updated_at 컬럼이 이미 없을 수 있으니 DB는 IF EXISTS로 안전하게 처리하고,
         # Django state에서는 RemoveField를 적용
         migrations.SeparateDatabaseAndState(
@@ -26,23 +24,23 @@ class Migration(migrations.Migration):
             ],
             state_operations=[
                 migrations.RemoveField(
-                    model_name='category',
-                    name='updated_at',
+                    model_name="category",
+                    name="updated_at",
                 ),
             ],
         ),
-
         migrations.AlterField(
-            model_name='category',
-            name='kind',
-            field=models.CharField(choices=[('INCOME', 'INCOME'), ('EXPENSE', 'EXPENSE')], max_length=10),
+            model_name="category",
+            name="kind",
+            field=models.CharField(
+                choices=[("INCOME", "INCOME"), ("EXPENSE", "EXPENSE")], max_length=10
+            ),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='sort_order',
+            model_name="category",
+            name="sort_order",
             field=models.IntegerField(default=0),
         ),
-
         # 인덱스도 이미 존재할 수 있으니 DB는 IF NOT EXISTS로 안전하게 처리하고,
         # Django state에서는 AddIndex를 적용
         migrations.SeparateDatabaseAndState(
@@ -60,12 +58,16 @@ class Migration(migrations.Migration):
             ],
             state_operations=[
                 migrations.AddIndex(
-                    model_name='category',
-                    index=models.Index(fields=['user', 'deleted_at'], name='category_ca_user_id_1c2f2b_idx'),
+                    model_name="category",
+                    index=models.Index(
+                        fields=["user", "deleted_at"], name="category_ca_user_id_1c2f2b_idx"
+                    ),
                 ),
                 migrations.AddIndex(
-                    model_name='category',
-                    index=models.Index(fields=['user', 'kind', 'deleted_at'], name='category_ca_user_id_7c90a0_idx'),
+                    model_name="category",
+                    index=models.Index(
+                        fields=["user", "kind", "deleted_at"], name="category_ca_user_id_7c90a0_idx"
+                    ),
                 ),
             ],
         ),

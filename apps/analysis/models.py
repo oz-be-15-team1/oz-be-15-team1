@@ -1,9 +1,10 @@
 from django.db import models
 
 from apps.members.models import User
+from apps.trashcan.models import TrashableModel
 
 
-class Analysis(models.Model):
+class Analysis(TrashableModel):
     """
     사용자 분석 결과 모델.
     """

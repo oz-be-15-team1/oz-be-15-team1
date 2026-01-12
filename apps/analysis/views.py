@@ -2,8 +2,11 @@ from django_celery_results.models import TaskResult
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from apps.trashcan.services import TrashService
 
 from .models import Analysis
 from .serializers import AnalysisSerializer
@@ -19,8 +22,10 @@ class AnalysisViewSet(viewsets.ModelViewSet):
     인증: JWT Bearer 토큰 필요
     """
 
-    queryset = Analysis.objects.all()
     serializer_class = AnalysisSerializer
+
+    def get_queryset(self):
+        return TrashService.list_alive(Analysis, self.request.user.id)
 
     @swagger_auto_schema(
         operation_summary="분석 목록 조회",
@@ -47,6 +52,42 @@ class AnalysisViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        TrashService.soft_delete(Analysis, request.user.id, instance.id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @swagger_auto_schema(
+        operation_summary="분석 휴지통 목록 조회",
+        operation_description="삭제된(휴지통에 있는) 분석 데이터를 조회합니다.",
+        responses={
+            200: openapi.Response("분석 휴지통 목록 조회 성공", AnalysisSerializer(many=True)),
+            401: "인증 실패",
+        },
+        tags=["분석 관리"],
+    )
+    @action(detail=False, methods=["get"], url_path="trash")
+    def trash(self, request, *args, **kwargs):
+        qs = TrashService.list_deleted(Analysis, request.user.id)
+        serializer = AnalysisSerializer(qs, many=True, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_summary="분석 복구",
+        operation_description="삭제된(휴지통에 있는) 분석 데이터를 복구합니다.",
+        responses={
+            200: openapi.Response("분석 복구 성공", AnalysisSerializer),
+            401: "인증 실패",
+            404: "분석 데이터를 찾을 수 없음",
+        },
+        tags=["분석 관리"],
+    )
+    @action(detail=True, methods=["post"], url_path="restore")
+    def restore(self, request, *args, **kwargs):
+        instance = TrashService.restore(Analysis, request.user.id, kwargs.get("pk"))
+        serializer = AnalysisSerializer(instance, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class AnalysisListView(generics.ListAPIView):
     """
@@ -60,9 +101,7 @@ class AnalysisListView(generics.ListAPIView):
     serializer_class = AnalysisSerializer
 
     def get_queryset(self):
-        queryset = Analysis.objects.all()
-        if self.request.user and self.request.user.is_authenticated:
-            queryset = queryset.filter(user=self.request.user)
+        queryset = TrashService.list_alive(Analysis, self.request.user.id)
         period_type = self.request.query_params.get("type")
         if period_type:
             queryset = queryset.filter(type=period_type)

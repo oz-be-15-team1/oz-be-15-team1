@@ -1,8 +1,11 @@
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.response import Response
+
+from apps.trashcan.services import TrashService
 
 from .models import Account
 from .serializers import AccountCreateRequestSerializer, AccountResponseSerializer
@@ -58,8 +61,11 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     # 사용자는 본인의 계좌만 조회/생성 가능
     def get_queryset(self):
-        # select_related로 user 정보를 한 번에 가져와 N+1 문제 해결
-        return Account.objects.select_related("user").filter(user=self.request.user)
+        # select_related로 user 정보를 한 번에 가져와 N+1 문제 해결 (계좌 목록에서 휴지통 간 계좌 숨기기)
+        return Account.objects.select_related("user").filter(
+            user=self.request.user,
+            deleted_at__isnull=True,
+        )
 
     # 생성 동작일 때 특정 시리얼라이저 사용
     def get_serializer_class(self):
@@ -135,8 +141,41 @@ class AccountViewSet(viewsets.ModelViewSet):
         },
         tags=["계좌 관리"],
     )
-    # 계좌 삭제: 소유자만 가능하며 관련 트랜잭션은 DB 제약(on_delete=models.CASCADE)에 따라 삭제
+    # 계좌 삭제: 휴지통 기능
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.delete()
+        TrashService.soft_delete(Account, request.user.id, instance.id)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @swagger_auto_schema(
+        operation_summary="계좌 휴지통 목록 조회",
+        operation_description="삭제된(휴지통에 있는) 계좌 목록을 조회합니다.",
+        responses={
+            200: openapi.Response(
+                "계좌 휴지통 목록 조회 성공", AccountResponseSerializer(many=True)
+            ),
+            401: "인증 실패",
+        },
+        tags=["계좌 관리"],
+    )
+    @action(detail=False, methods=["get"], url_path="trash")
+    def trash(self, request, *args, **kwargs):
+        qs = TrashService.list_deleted(Account, request.user.id)
+        response_serializer = AccountResponseSerializer(qs, many=True)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(
+        operation_summary="계좌 복구",
+        operation_description="삭제된(휴지통에 있는) 계좌를 복구합니다.",
+        responses={
+            200: openapi.Response("계좌 복구 성공", AccountResponseSerializer),
+            401: "인증 실패",
+            404: "계좌를 찾을 수 없음",
+        },
+        tags=["계좌 관리"],
+    )
+    @action(detail=True, methods=["post"], url_path="restore")
+    def restore(self, request, *args, **kwargs):
+        instance = TrashService.restore(Account, request.user.id, kwargs.get("pk"))
+        response_serializer = AccountResponseSerializer(instance)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)

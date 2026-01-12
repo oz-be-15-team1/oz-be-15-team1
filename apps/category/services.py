@@ -1,13 +1,13 @@
-from .repositories import CategoryRepository
+from apps.trashcan.services import TrashService
+
+from .models import Category
 
 
 class CategoryService:
     @staticmethod
     def soft_delete(user_id: int, category_id: int) -> None:
-        obj = CategoryRepository.get_alive(user_id, category_id)
-        obj.soft_delete()
+        TrashService.soft_delete(Category, user_id, category_id)
 
     @staticmethod
     def restore(user_id: int, category_id: int) -> None:
-        obj = CategoryRepository.get_deleted(user_id, category_id)
-        obj.restore()
+        TrashService.restore(Category, user_id, category_id)
