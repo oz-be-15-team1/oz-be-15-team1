@@ -11,8 +11,7 @@ class TagRepository:
     def list_alive(user_id: int) -> QuerySet[Tag]:
         # 정상 목록: 삭제 안 된 것만 + 필요한 필드만 + 이름 정렬
         return (
-            Tag.objects
-            .filter(user_id=user_id, deleted_at__isnull=True)
+            Tag.objects.filter(user_id=user_id, deleted_at__isnull=True)
             .only(*TagRepository._LIST_ONLY_FIELDS)
             .order_by("name")
         )
@@ -21,8 +20,7 @@ class TagRepository:
     def list_deleted(user_id: int) -> QuerySet[Tag]:
         # 휴지통 목록: 삭제된 것만 + 필요한 필드만 + 최근 삭제 순
         return (
-            Tag.objects
-            .filter(user_id=user_id, deleted_at__isnull=False)
+            Tag.objects.filter(user_id=user_id, deleted_at__isnull=False)
             .only(*TagRepository._LIST_ONLY_FIELDS)
             .order_by("-deleted_at")
         )
@@ -39,17 +37,13 @@ class TagRepository:
     @staticmethod
     def soft_delete(user_id: int, tag_id: int) -> int:
         #  휴지통으로 보내기: UPDATE 1번
-        return (
-            Tag.objects
-            .filter(id=tag_id, user_id=user_id, deleted_at__isnull=True)
-            .update(deleted_at=timezone.now())
+        return Tag.objects.filter(id=tag_id, user_id=user_id, deleted_at__isnull=True).update(
+            deleted_at=timezone.now()
         )
 
     @staticmethod
     def restore(user_id: int, tag_id: int) -> int:
         #  복구: UPDATE 1번
-        return (
-            Tag.objects
-            .filter(id=tag_id, user_id=user_id, deleted_at__isnull=False)
-            .update(deleted_at=None)
+        return Tag.objects.filter(id=tag_id, user_id=user_id, deleted_at__isnull=False).update(
+            deleted_at=None
         )

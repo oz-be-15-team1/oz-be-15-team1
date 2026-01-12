@@ -1,10 +1,12 @@
 from django.db import models
 
 from apps.account.models import Account
+from apps.common.models import SoftDeleteManager
 from apps.tag.models import Tag
+from apps.trashcan.models import TrashableModel
 
 
-class Transaction(models.Model):
+class Transaction(TrashableModel):
     id: int
     DIRECTION_CHOICES = [
         ("income", "Income"),
@@ -26,6 +28,10 @@ class Transaction(models.Model):
     occurred_at = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    #  soft delete 기본 매니저
+    objects = SoftDeleteManager()
+    all_objects = models.Manager()
 
     def __str__(self):
         return f"{self.account.name} - {self.amount} ({self.direction})"

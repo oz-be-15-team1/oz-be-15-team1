@@ -181,5 +181,6 @@ class UserProfileView(GenericAPIView):
 
     def delete(self, request):
         # 본인 계정 삭제
-        request.user.delete()
+        request.user.is_active = False
+        request.user.save(update_fields=["is_active"])
         return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)

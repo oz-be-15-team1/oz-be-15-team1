@@ -4,11 +4,9 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('tag', '0005_alter_tag_user'),
-        ('tag', '0006_fix_user_fk'),
+        ("tag", "0005_alter_tag_user"),
+        ("tag", "0006_fix_user_fk"),
     ]
 
-    operations = [
-    ]
+    operations = []

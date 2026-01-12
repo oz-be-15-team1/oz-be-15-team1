@@ -19,7 +19,10 @@ def create_transaction(
     # 트랜잭션 블록으로 Transaction 생성과 Account 갱신을 원자적으로 수행
     with transaction.atomic():
         try:
-            account = Account.objects.select_for_update().get(pk=pk)
+            account = Account.objects.select_for_update().get(
+                pk=pk, deleted_at__isnull=True
+            )  # 거래 생성 막는 곳
+
         except Account.DoesNotExist:
             raise ValidationError("계좌가 없습니다")
 

@@ -4,7 +4,10 @@ from django.utils import timezone
 
 
 class Category(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,  null=True, blank=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
+
     class Kind(models.TextChoices):
         INCOME = "INCOME", "INCOME"
         EXPENSE = "EXPENSE", "EXPENSE"

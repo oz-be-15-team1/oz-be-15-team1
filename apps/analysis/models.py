@@ -1,9 +1,11 @@
 from django.db import models
 
+from apps.common.models import SoftDeleteManager
 from apps.members.models import User
+from apps.trashcan.models import TrashableModel
 
 
-class Analysis(models.Model):
+class Analysis(TrashableModel):
     """
     사용자 분석 결과 모델.
     """
@@ -29,6 +31,10 @@ class Analysis(models.Model):
     result_image = models.ImageField(upload_to="analysis_images/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    #  soft delete 기본 매니저
+    objects = SoftDeleteManager()
+    all_objects = models.Manager()
 
     def __str__(self):
         return f"{self.user.email} - {self.about} ({self.type})"
