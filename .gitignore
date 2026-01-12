@@ -405,3 +405,21 @@ pyrightconfig.json
 frontend/node_modules/
 .vscode/
 .vite/
+
+
+# frontend deps
+frontend/node_modules/
+node_modules/
+
+# env (local secrets)
+.env*
+!.env.example
+
+# frontend build/cache
+frontend/.vite/
+frontend/dist/
+
+# (optional) unknown local file/folder
+git/
+
+
