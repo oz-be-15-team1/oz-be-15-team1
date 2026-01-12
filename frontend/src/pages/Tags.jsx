@@ -11,6 +11,8 @@ export default function TagsPage() {
   const [tags, setTags] = useState([]);
   const [trash, setTrash] = useState([]);
   const [form, setForm] = useState(initialForm);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState(initialForm);
   const [message, setMessage] = useState("");
 
   const fetchTags = async () => {
@@ -72,6 +74,35 @@ export default function TagsPage() {
     }
   };
 
+  const startEdit = (tag) => {
+    setEditingId(tag.id);
+    setEditForm({
+      name: tag.name || "",
+      color: tag.color || "",
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm(initialForm);
+  };
+
+  const handleEdit = async (event) => {
+    event.preventDefault();
+    if (!editingId) return;
+    setMessage("");
+    try {
+      await apiFetch(`/tags/${editingId}/`, {
+        method: "PATCH",
+        body: cleanPayload(editForm),
+      });
+      cancelEdit();
+      fetchTags();
+    } catch (error) {
+      setMessage(`태그 수정 실패: ${error.message}`);
+    }
+  };
+
   return (
     <section className="page">
       <header className="page-header">
@@ -96,9 +127,14 @@ export default function TagsPage() {
                     {tag.color || "기본"}
                   </span>
                 </div>
-                <button className="ghost" type="button" onClick={() => handleDelete(tag.id)}>
-                  삭제
-                </button>
+                <div className="list-meta">
+                  <button className="ghost" type="button" onClick={() => startEdit(tag)}>
+                    수정
+                  </button>
+                  <button className="ghost" type="button" onClick={() => handleDelete(tag.id)}>
+                    삭제
+                  </button>
+                </div>
               </li>
             ))}
             {!tags.length && <li className="empty">태그를 만들어 볼까요?</li>}
@@ -151,6 +187,34 @@ export default function TagsPage() {
           {!trash.length && <li className="empty">휴지통이 비어 있어요.</li>}
         </ul>
       </div>
+
+      {editingId && (
+        <form className="card form" onSubmit={handleEdit}>
+          <div className="card-header">
+            <h3>태그 수정</h3>
+            <button type="button" className="ghost" onClick={cancelEdit}>
+              닫기
+            </button>
+          </div>
+          <label>
+            이름
+            <input
+              value={editForm.name}
+              onChange={(event) => setEditForm({ ...editForm, name: event.target.value })}
+              required
+            />
+          </label>
+          <label>
+            컬러
+            <input
+              type="color"
+              value={editForm.color || "#ffb3c7"}
+              onChange={(event) => setEditForm({ ...editForm, color: event.target.value })}
+            />
+          </label>
+          <button type="submit">수정 저장</button>
+        </form>
+      )}
     </section>
   );
 }

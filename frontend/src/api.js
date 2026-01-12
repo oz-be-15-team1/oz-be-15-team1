@@ -41,6 +41,7 @@ export const apiFetch = async (path, options = {}) => {
   const response = await fetch(`${apiBase}${path}`, {
     ...options,
     headers,
+    credentials: options.credentials,
     body: hasBody && !isFormData && typeof options.body !== "string"
       ? JSON.stringify(options.body)
       : options.body,

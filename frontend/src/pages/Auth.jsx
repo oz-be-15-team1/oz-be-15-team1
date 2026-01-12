@@ -1,17 +1,22 @@
 import { useState } from "react";
 
-import { apiFetch, setToken } from "../api.js";
+import { apiFetch, apiOrigin, setToken } from "../api.js";
 
 export default function AuthPage({ onLogin }) {
   const [signup, setSignup] = useState({
     email: "",
     password: "",
     name: "",
-    nickname: "",
     phone: "",
   });
   const [login, setLogin] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const callbackUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/auth/social-callback`
+    : "/auth/social-callback";
+  const googleLoginUrl = apiOrigin
+    ? `${apiOrigin}/allauth/google/login/?process=login&next=${encodeURIComponent(callbackUrl)}`
+    : `/allauth/google/login/?process=login&next=${encodeURIComponent(callbackUrl)}`;
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -19,11 +24,16 @@ export default function AuthPage({ onLogin }) {
     try {
       await apiFetch("/users/signup/", {
         method: "POST",
-        body: signup,
+        body: {
+          email: signup.email,
+          password: signup.password,
+          name: signup.name,
+          phone: signup.phone,
+        },
         auth: false,
       });
       setMessage("회원가입 완료! 이제 로그인해 주세요.");
-      setSignup({ email: "", password: "", name: "", nickname: "", phone: "" });
+      setSignup({ email: "", password: "", name: "", phone: "" });
     } catch (error) {
       setMessage(`회원가입 실패: ${error.message}`);
     }
@@ -42,7 +52,7 @@ export default function AuthPage({ onLogin }) {
       if (onLogin) {
         onLogin(data.token);
       }
-      setMessage(`환영합니다, ${data.user.nickname || data.user.name}!`);
+      setMessage(`환영합니다, ${data.user.name}!`);
       setLogin({ email: "", password: "" });
     } catch (error) {
       setMessage(`로그인 실패: ${error.message}`);
@@ -92,15 +102,6 @@ export default function AuthPage({ onLogin }) {
             />
           </label>
           <label>
-            닉네임
-            <input
-              type="text"
-              value={signup.nickname}
-              onChange={(event) => setSignup({ ...signup, nickname: event.target.value })}
-              required
-            />
-          </label>
-          <label>
             전화번호
             <input
               type="text"
@@ -133,6 +134,12 @@ export default function AuthPage({ onLogin }) {
           </label>
           <button type="submit">로그인</button>
           <p className="hint">로그인 후 다른 페이지에서 토큰이 자동 적용돼요.</p>
+          <div className="social-row">
+            <span className="muted">소셜 로그인</span>
+            <a className="social-button google" href={googleLoginUrl}>
+              Google로 계속하기
+            </a>
+          </div>
         </form>
       </div>
     </section>

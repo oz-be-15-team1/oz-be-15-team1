@@ -18,6 +18,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+ACCOUNT_ALLOWED_REDIRECT_HOSTS = [
+    "localhost:5173",
+]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -55,7 +59,7 @@ INSTALLED_APPS = [
     "apps.tag.apps.TagConfig",
 ]
 
-SITE_ID = 1  # 우리 서비스 도메인
+SITE_ID = 2  # 우리 서비스 도메인
 
 SWAGGER_SETTINGS = {
     "SECURITY_DEFINITIONS": {"Bearer": {"type": "apiKey", "name": "Authorization", "in": "header"}}
@@ -100,12 +104,27 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",  # allauth 인증 (이메일 로그인 + 소셜 로그인)
 ]
 
-# allauth 기본 설정
-# ACCOUNT_AUTHENTICATION_METHOD = "email"
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-# ACCOUNT_EMAIL_VERIFICATION = "none"
+# Social Login Provider 설정
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
+
+# allauth 기본 설정 (사용자 모델: email, name, phone)
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*", "name*", "phone"]
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_FORMS = {"signup": "apps.members.forms.CustomSignupForm"}
+ACCOUNT_ADAPTER = "apps.members.adapters.CustomAccountAdapter"
 
 # Redirect after login/logout
 LOGIN_REDIRECT_URL = "/"
@@ -153,9 +172,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("apps.core.auth.OptionalBearerJWTAuthentication",),
 }
 
 SIMPLE_JWT = {

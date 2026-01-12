@@ -66,6 +66,18 @@ export default function AnalysisPage() {
     return `${apiOrigin}${value.startsWith("/") ? value : `/${value}`}`;
   };
 
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm("이 분석 결과를 삭제할까요?");
+    if (!confirmed) return;
+    setMessage("");
+    try {
+      await apiFetch(`/analyses/${id}/`, { method: "DELETE" });
+      fetchAnalyses();
+    } catch (error) {
+      setMessage(`분석 삭제 실패: ${error.message}`);
+    }
+  };
+
   return (
     <section className="page">
       <header className="page-header">
@@ -168,6 +180,9 @@ export default function AnalysisPage() {
                 {analysis.type} · {analysis.period_start} ~ {analysis.period_end}
               </p>
               <p>{analysis.description}</p>
+              <button type="button" className="ghost" onClick={() => handleDelete(analysis.id)}>
+                삭제
+              </button>
             </div>
             {analysis.result_image && (
               <img src={resolveImage(analysis.result_image)} alt="분석 그래프" />

@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("account", "0001_initial"),
+        ("bank_account", "0001_initial"),
     ]
 
     operations = [
