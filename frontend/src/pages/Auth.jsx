@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { apiFetch, setToken } from "../api.js";
+import { apiFetch, apiOrigin, setToken } from "../api.js";
 
 export default function AuthPage({ onLogin }) {
   const [signup, setSignup] = useState({
@@ -11,6 +11,12 @@ export default function AuthPage({ onLogin }) {
   });
   const [login, setLogin] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
+  const callbackUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/auth/social-callback`
+    : "/auth/social-callback";
+  const googleLoginUrl = apiOrigin
+    ? `${apiOrigin}/allauth/google/login/?process=login&next=${encodeURIComponent(callbackUrl)}`
+    : `/allauth/google/login/?process=login&next=${encodeURIComponent(callbackUrl)}`;
 
   const handleSignup = async (event) => {
     event.preventDefault();
@@ -128,6 +134,12 @@ export default function AuthPage({ onLogin }) {
           </label>
           <button type="submit">로그인</button>
           <p className="hint">로그인 후 다른 페이지에서 토큰이 자동 적용돼요.</p>
+          <div className="social-row">
+            <span className="muted">소셜 로그인</span>
+            <a className="social-button google" href={googleLoginUrl}>
+              Google로 계속하기
+            </a>
+          </div>
         </form>
       </div>
     </section>

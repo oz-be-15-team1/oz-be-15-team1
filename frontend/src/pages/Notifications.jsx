@@ -41,6 +41,19 @@ export default function NotificationsPage() {
     }
   };
 
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm("이 알림을 삭제할까요?");
+    if (!confirmed) return;
+    setMessage("");
+    try {
+      await apiFetch(`/notifications/${id}/`, { method: "DELETE" });
+      fetchAll();
+      fetchUnread();
+    } catch (error) {
+      setMessage(`알림 삭제 실패: ${error.message}`);
+    }
+  };
+
   return (
     <section className="page">
       <header className="page-header">
@@ -68,9 +81,14 @@ export default function NotificationsPage() {
                   <strong>{item.message}</strong>
                   <span>{item.created_at}</span>
                 </div>
-                <button type="button" onClick={() => handleMarkRead(item.id)}>
-                  읽음
-                </button>
+                <div className="list-meta">
+                  <button type="button" onClick={() => handleMarkRead(item.id)}>
+                    읽음
+                  </button>
+                  <button className="ghost" type="button" onClick={() => handleDelete(item.id)}>
+                    삭제
+                  </button>
+                </div>
               </li>
             ))}
             {!unread.length && <li className="empty">미확인 알림이 없어요.</li>}
@@ -91,11 +109,16 @@ export default function NotificationsPage() {
                   <strong>{item.message}</strong>
                   <span>{item.created_at}</span>
                 </div>
-                {!item.is_read && (
-                  <button type="button" onClick={() => handleMarkRead(item.id)}>
-                    읽음
+                <div className="list-meta">
+                  {!item.is_read && (
+                    <button type="button" onClick={() => handleMarkRead(item.id)}>
+                      읽음
+                    </button>
+                  )}
+                  <button className="ghost" type="button" onClick={() => handleDelete(item.id)}>
+                    삭제
                   </button>
-                )}
+                </div>
               </li>
             ))}
             {!notifications.length && <li className="empty">알림이 아직 없어요.</li>}

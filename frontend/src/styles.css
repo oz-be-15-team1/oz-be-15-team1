@@ -354,6 +354,31 @@ button.ghost {
   font-size: 12px;
 }
 
+.social-row {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.social-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  background: #fff;
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: 0 10px 18px rgba(93, 217, 193, 0.2);
+}
+
+.social-button.google {
+  border-color: #e4e1ff;
+  background: linear-gradient(120deg, #ffffff, #f4f2ff);
+}
+
 @keyframes float {
   0%,
   100% {

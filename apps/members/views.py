@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -171,6 +172,32 @@ class UserProfileView(GenericAPIView):
         request.user.is_active = False
         request.user.save(update_fields=["is_active"])
         return Response({"detail": "Deleted successfully"}, status=status.HTTP_200_OK)
+
+
+class SocialTokenView(APIView):
+    """
+    소셜 로그인 세션을 JWT 토큰으로 교환하는 API
+    """
+
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        response_data = {"user": UserSignupResponseSerializer(user).data, "token": access_token}
+        response = Response(response_data, status=status.HTTP_200_OK)
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            secure=True,
+            samesite="Lax",
+            max_age=7 * 24 * 60 * 60,
+        )
+        return response
 
 
 """

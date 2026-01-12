@@ -1,10 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-<<<<<<< HEAD
-  // Created: 2026-01-12 19:36
-=======
-  // Created: 2026-01-12 20:33
->>>>>>> afacaa8 (✨ feat : feat: 프로필 추가 및 카테고리·태그 수정/거래 필터 개선)
+  // Created: 2026-01-12 22:23
   // Cli Options: -a -g --dot
 
   fontname = "Roboto"

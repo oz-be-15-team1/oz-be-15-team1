@@ -10,6 +10,7 @@ import TagsPage from "./pages/Tags.jsx";
 import AnalysisPage from "./pages/Analysis.jsx";
 import NotificationsPage from "./pages/Notifications.jsx";
 import ProfilePage from "./pages/Profile.jsx";
+import SocialCallback from "./pages/SocialCallback.jsx";
 import { apiOrigin, clearToken, getToken } from "./api.js";
 
 const navItems = [
@@ -83,6 +84,10 @@ export default function App() {
           <Route path="/analysis" element={<AnalysisPage />} />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/profile" element={<ProfilePage onLogout={setTokenState} />} />
+          <Route
+            path="/auth/social-callback"
+            element={<SocialCallback onLogin={setTokenState} />}
+          />
         </Routes>
       </main>
     </div>

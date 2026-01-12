@@ -35,6 +35,30 @@ services:
       - .:/app
       - oz-be-15-team1_web_venv:/app/.venv
 
+  celery_worker:
+    build: .
+    command: uv run celery -A budget worker -l info
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+      - oz-be-15-team1_web_venv:/app/.venv
+
+  celery_beat:
+    build: .
+    command: uv run celery -A budget beat -l info
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/app
+      - oz-be-15-team1_web_venv:/app/.venv
+
   frontend:
     image: node:20-alpine
     working_dir: /app

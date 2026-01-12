@@ -100,6 +100,17 @@ make frontend
 - Redoc: `/redoc/`
 - 상세 스펙: `API_SPEC.md`, `API_SPEC_TABLE.md`, `API_SPEC_SWAGGER.md`
 
+## 소셜 로그인 (Google)
+
+1) 프론트에서 Google 로그인 버튼 클릭  
+2) `/allauth/google/login/`로 이동 → 인증 완료  
+3) 프론트 `/auth/social-callback`에서 `/api/users/social/token/` 호출 → JWT 저장
+
+필수 설정:
+- `SITE_ID` 설정
+- Google OAuth Client 등록 및 콜백 URL 설정
+  - 예: `http://localhost:5173/auth/social-callback`
+
 ## ERD
 
 `docs/erd.png`에 ERD를 생성해 둡니다.
