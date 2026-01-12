@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     # SWAGGER: API 문서화
     "drf_yasg",
     # OWN APPS
-    "apps.account.apps.AccountConfig",
+    "apps.bank_account.apps.AccountConfig",
     "apps.members.apps.MembersConfig",
     "apps.transaction.apps.TransactionConfig",
     "apps.core.apps.CoreConfig",
@@ -76,6 +76,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]

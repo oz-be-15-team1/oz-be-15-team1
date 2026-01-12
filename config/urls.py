@@ -33,7 +33,7 @@ urlpatterns = [
     # API 엔드포인트
     path("api/analyses/", include("apps.analysis.urls")),
     path("api/notifications/", include("apps.notification.urls")),
-    path("api/accounts/", include("apps.account.urls")),
+    path("api/accounts/", include("apps.bank_account.urls")),
     path("api/transactions/", include("apps.transaction.urls")),
     path("api/users/", include("apps.members.urls")),
     path("api/categories/", include("apps.category.urls")),

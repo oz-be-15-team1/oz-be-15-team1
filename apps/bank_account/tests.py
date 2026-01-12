@@ -3,7 +3,7 @@ from decimal import Decimal
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
-from apps.account.models import Account
+from apps.bank_account.models import Account
 from apps.members.models import User
 
 
