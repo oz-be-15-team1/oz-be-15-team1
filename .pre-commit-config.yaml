@@ -5,3 +5,10 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+  - repo: local
+    hooks:
+      - id: generate-erd
+        name: generate-erd
+        entry: ./scripts/generate_erd.sh
+        language: system
+        pass_filenames: false

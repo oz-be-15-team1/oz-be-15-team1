@@ -100,6 +100,7 @@ uv run celery -A budget beat -l info
 
 필수 의존성:
 - Graphviz (예: macOS `brew install graphviz`, Ubuntu `apt-get install graphviz`)
+- 스크립트는 Django `graph_models --dot` 출력 후 `dot`으로 PNG를 생성합니다.
 
 ![ERD](docs/erd.png)
 

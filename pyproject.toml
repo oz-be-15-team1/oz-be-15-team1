@@ -42,7 +42,6 @@ dev = [
     "python-dotenv",
     "pre-commit",
     "django-debug-toolbar",
-    "pygraphviz>=1.14",
 ]
 prod = [
     "gunicorn",
