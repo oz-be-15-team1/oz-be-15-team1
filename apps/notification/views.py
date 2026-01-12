@@ -51,6 +51,60 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    @swagger_auto_schema(
+        operation_summary="알림 생성",
+        operation_description="새로운 알림을 생성합니다.",
+        request_body=NotificationSerializer,
+        responses={
+            201: openapi.Response("알림 생성 성공", NotificationSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+        },
+        tags=["알림 관리"],
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="알림 전체 수정",
+        operation_description="알림 정보를 전체 수정합니다.",
+        request_body=NotificationSerializer,
+        responses={
+            200: openapi.Response("알림 수정 성공", NotificationSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+            404: "알림을 찾을 수 없음",
+        },
+        tags=["알림 관리"],
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="알림 부분 수정",
+        operation_description="알림 정보를 부분 수정합니다.",
+        request_body=NotificationSerializer,
+        responses={
+            200: openapi.Response("알림 수정 성공", NotificationSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+            404: "알림을 찾을 수 없음",
+        },
+        tags=["알림 관리"],
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="알림 삭제",
+        operation_description="알림을 삭제합니다(휴지통으로 이동).",
+        responses={
+            204: "알림 삭제 성공",
+            401: "인증 실패",
+            404: "알림을 찾을 수 없음",
+        },
+        tags=["알림 관리"],
+    )
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         TrashService.soft_delete(Notification, request.user.id, instance.id)

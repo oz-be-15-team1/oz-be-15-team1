@@ -167,6 +167,31 @@ class CategoryTrashListView(TrashListAPIView):
     model = Category
     serializer_class = CategoryReadSerializer
 
+    @swagger_auto_schema(
+        operation_summary="카테고리 휴지통 목록 조회",
+        operation_description="삭제된 카테고리 목록을 조회합니다.",
+        responses={
+            200: openapi.Response("휴지통 목록 조회 성공", CategoryReadSerializer(many=True)),
+            401: "인증 실패",
+        },
+        tags=["카테고리 관리"],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class CategoryRestoreView(RestoreAPIView):
     model = Category
+
+    @swagger_auto_schema(
+        operation_summary="카테고리 복원",
+        operation_description="휴지통의 카테고리를 복원합니다.",
+        responses={
+            200: "카테고리 복원 성공",
+            401: "인증 실패",
+            404: "카테고리를 찾을 수 없음",
+        },
+        tags=["카테고리 관리"],
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)

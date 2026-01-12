@@ -88,6 +88,23 @@ class UserLoginView(GenericAPIView):
 class UserLogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_summary="로그아웃",
+        operation_description="사용자 로그아웃 및 토큰을 블랙리스트에 추가합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["refresh"],
+            properties={
+                "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="리프레시 토큰"),
+            },
+        ),
+        responses={
+            200: "로그아웃 성공",
+            400: "잘못된 요청",
+            401: "인증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def post(self, request):
         refresh_token = request.data.get("refresh")
         if not refresh_token:
@@ -108,11 +125,31 @@ class UserProfileView(GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserProfileSerializer
 
+    @swagger_auto_schema(
+        operation_summary="프로필 조회",
+        operation_description="로그인한 사용자의 프로필 정보를 조회합니다.",
+        responses={
+            200: openapi.Response("프로필 조회 성공", UserProfileSerializer),
+            401: "인증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def get(self, request):
         # 본인 프로필 조회
         serializer = self.get_serializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        operation_summary="프로필 수정",
+        operation_description="로그인한 사용자의 프로필 정보를 수정합니다.",
+        request_body=UserProfileSerializer,
+        responses={
+            200: openapi.Response("프로필 수정 성공", UserProfileSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def patch(self, request):
         # 본인 프로필 일부 수정
         serializer = self.get_serializer(request.user, data=request.data, partial=True)
@@ -120,6 +157,15 @@ class UserProfileView(GenericAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(
+        operation_summary="계정 삭제",
+        operation_description="로그인한 사용자의 계정을 비활성화합니다.",
+        responses={
+            200: "계정 삭제 성공",
+            401: "인증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def delete(self, request):
         # 본인 계정 삭제
         request.user.is_active = False

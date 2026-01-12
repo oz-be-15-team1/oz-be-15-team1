@@ -52,6 +52,60 @@ class AnalysisViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
+    @swagger_auto_schema(
+        operation_summary="분석 생성",
+        operation_description="새로운 분석 데이터를 생성합니다.",
+        request_body=AnalysisSerializer,
+        responses={
+            201: openapi.Response("분석 생성 성공", AnalysisSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+        },
+        tags=["분석 관리"],
+    )
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="분석 전체 수정",
+        operation_description="분석 데이터를 전체 수정합니다.",
+        request_body=AnalysisSerializer,
+        responses={
+            200: openapi.Response("분석 수정 성공", AnalysisSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+            404: "분석 데이터를 찾을 수 없음",
+        },
+        tags=["분석 관리"],
+    )
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="분석 부분 수정",
+        operation_description="분석 데이터를 부분 수정합니다.",
+        request_body=AnalysisSerializer,
+        responses={
+            200: openapi.Response("분석 수정 성공", AnalysisSerializer),
+            400: "유효성 검증 실패",
+            401: "인증 실패",
+            404: "분석 데이터를 찾을 수 없음",
+        },
+        tags=["분석 관리"],
+    )
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="분석 삭제",
+        operation_description="분석 데이터를 삭제합니다(휴지통으로 이동).",
+        responses={
+            204: "분석 삭제 성공",
+            401: "인증 실패",
+            404: "분석 데이터를 찾을 수 없음",
+        },
+        tags=["분석 관리"],
+    )
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         TrashService.soft_delete(Analysis, request.user.id, instance.id)
@@ -100,6 +154,26 @@ class AnalysisListView(generics.ListAPIView):
 
     serializer_class = AnalysisSerializer
 
+    @swagger_auto_schema(
+        operation_summary="분석 목록 필터링 조회",
+        operation_description="사용자와 기간 타입별로 분석 데이터를 필터링하여 조회합니다.",
+        manual_parameters=[
+            openapi.Parameter(
+                "type",
+                openapi.IN_QUERY,
+                description="기간 타입",
+                type=openapi.TYPE_STRING,
+            ),
+        ],
+        responses={
+            200: openapi.Response("분석 목록 조회 성공", AnalysisSerializer(many=True)),
+            401: "인증 실패",
+        },
+        tags=["분석 관리"],
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
     def get_queryset(self):
         queryset = TrashService.list_alive(Analysis, self.request.user.id)
         period_type = self.request.query_params.get("type")
@@ -115,6 +189,36 @@ class AnalysisRunView(APIView):
     분석 유형과 기간 정보를 받아 비동기 분석 작업을 시작합니다.
     """
 
+    @swagger_auto_schema(
+        operation_summary="분석 실행 요청",
+        operation_description="분석 유형과 기간 정보를 받아 비동기 분석 작업을 시작합니다.",
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["about", "type", "period_start", "period_end"],
+            properties={
+                "about": openapi.Schema(type=openapi.TYPE_STRING, description="분석 유형"),
+                "type": openapi.Schema(type=openapi.TYPE_STRING, description="기간 타입"),
+                "period_start": openapi.Schema(
+                    type=openapi.TYPE_STRING, format=openapi.FORMAT_DATE, description="시작 날짜"
+                ),
+                "period_end": openapi.Schema(
+                    type=openapi.TYPE_STRING, format=openapi.FORMAT_DATE, description="종료 날짜"
+                ),
+            },
+        ),
+        responses={
+            202: openapi.Response(
+                "분석 작업 시작됨",
+                openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={"task_id": openapi.Schema(type=openapi.TYPE_STRING)},
+                ),
+            ),
+            400: "잘못된 요청",
+            401: "인증 실패",
+        },
+        tags=["분석 관리"],
+    )
     def post(self, request):
         analysis_type = request.data.get("about")
         period_type = request.data.get("type")
@@ -144,6 +248,27 @@ class AnalysisTaskStatusView(APIView):
     Celery task_id 기준으로 작업 상태를 조회합니다.
     """
 
+    @swagger_auto_schema(
+        operation_summary="분석 작업 상태 조회",
+        operation_description="Celery task_id 기준으로 작업 상태를 조회합니다.",
+        responses={
+            200: openapi.Response(
+                "작업 상태 조회 성공",
+                openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "status": openapi.Schema(type=openapi.TYPE_STRING),
+                        "result": openapi.Schema(type=openapi.TYPE_STRING),
+                        "date_done": openapi.Schema(
+                            type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME
+                        ),
+                    },
+                ),
+            ),
+            401: "인증 실패",
+        },
+        tags=["분석 관리"],
+    )
     def get(self, request, task_id):
         task = TaskResult.objects.filter(task_id=task_id).first()
         if not task:
