@@ -1,5 +1,6 @@
 from .base import *  # noqa
 import sys
+import os
 
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
@@ -33,3 +34,8 @@ INTERNAL_IPS += [ip[: ip.rfind(".")] + ".1" for ip in ips]
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,  # noqa: F405
 }
+
+# Google Social Login
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+SOCIAL_AUTH_GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+SOCIAL_AUTH_GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "")

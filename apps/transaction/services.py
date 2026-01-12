@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.db import transaction
 from rest_framework.exceptions import PermissionDenied, ValidationError
 
-from apps.account.models import Account
+from apps.bank_account.models import Account
 from apps.tag.models import Tag
 
 from .models import Transaction

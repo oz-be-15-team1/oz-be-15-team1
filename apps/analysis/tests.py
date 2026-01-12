@@ -172,7 +172,7 @@ class AnalyzerTest(TestCase):
             password="testpass123",
             name="Analyzer User",
         )
-        from apps.account.models import Account
+        from apps.bank_account.models import Account
 
         self.account = Account.objects.create(
             user=self.user,

@@ -20,30 +20,19 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
-    authentication_classes=[],
 )
-
-# SWAGGER: JWT 인증 설정 (중복 설정 - base.py에도 존재)
-SWAGGER_SETTINGS = {
-    "SECURITY_DEFINITIONS": {
-        "Bearer": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header",
-        }
-    },
-    "USE_SESSION_AUTH": False,
-}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    # allauth (소셜 로그인)
+    path("allauth/", include("allauth.urls")),
     # SWAGGER: API 문서 UI 엔드포인트
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     # API 엔드포인트
     path("api/analyses/", include("apps.analysis.urls")),
     path("api/notifications/", include("apps.notification.urls")),
-    path("api/accounts/", include("apps.account.urls")),
+    path("api/accounts/", include("apps.bank_account.urls")),
     path("api/transactions/", include("apps.transaction.urls")),
     path("api/users/", include("apps.members.urls")),
     path("api/categories/", include("apps.category.urls")),

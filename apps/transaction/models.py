@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.account.models import Account
+from apps.bank_account.models import Account
 from apps.common.models import SoftDeleteManager
 from apps.tag.models import Tag
 from apps.trashcan.models import TrashableModel
