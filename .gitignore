@@ -399,26 +399,9 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/dotenv,python,pycharm,visualstudiocode,django
 .DS_Store
-
 .env
 .env.local
 .env.docker
 frontend/node_modules/
 .vscode/
 .vite/
-
-# frontend deps
-frontend/node_modules/
-node_modules/
-
-# env (local secrets)
-.env*
-!.env.example
-
-# frontend build/cache
-frontend/.vite/
-frontend/dist/
-
-# (optional) unknown local file/folder
-git
-
