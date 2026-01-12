@@ -1,10 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  
-  // Created: 2026-01-12 18:30
-
-  // Created: 2026-01-12 16:22
-
+  // Created: 2026-01-12 19:36
   // Cli Options: -a -g --dot
 
   fontname = "Roboto"
@@ -330,6 +326,54 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
+    django_contrib_sites_models_Site [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      Site
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>AutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">domain</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">name</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+
+  }
+  subgraph cluster_apps_bank_account {
+    label=<
+          <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+          <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+          <FONT FACE="Roboto" COLOR="Black" POINT-SIZE="10">
+          <B>apps.bank_account</B>
+          </FONT>
+          </TD></TR>
+          </TABLE>
+          >
+    color=olivedrab4
+    style="rounded"
+  
     apps_trashcan_models_TrashableModel [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
@@ -356,7 +400,7 @@ digraph model_graph {
       </TABLE>
       >]
   
-    apps_account_models_Account [label=<
+    apps_bank_account_models_Account [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
       <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
@@ -500,24 +544,6 @@ digraph model_graph {
     color=olivedrab4
     style="rounded"
   
-    django_contrib_auth_models_PermissionsMixin [label=<
-      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
-      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
-      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-      PermissionsMixin
-      </B></FONT></TD></TR>
-    
-    
-      <TR><TD ALIGN="LEFT" BORDER="0">
-      <FONT FACE="Roboto">is_superuser</FONT>
-      </TD><TD ALIGN="LEFT">
-      <FONT FACE="Roboto">BooleanField</FONT>
-      </TD></TR>
-    
-    
-      </TABLE>
-      >]
-  
     django_contrib_auth_base_user_AbstractBaseUser [label=<
       <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
       <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
@@ -538,6 +564,24 @@ digraph model_graph {
       <FONT FACE="Roboto">password</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
+    django_contrib_auth_models_PermissionsMixin [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      PermissionsMixin
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">is_superuser</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">BooleanField</FONT>
       </TD></TR>
     
     
@@ -2562,20 +2606,30 @@ digraph model_graph {
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
+
   apps_trashcan_models_TrashableModel -> apps_members_models_User
   [label=" deleted_by (deleted_%(class)s_set)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  apps_account_models_Account -> apps_members_models_User
+  apps_bank_account_models_Account -> apps_members_models_User
   [label=" deleted_by (deleted_account_set)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  apps_account_models_Account -> apps_members_models_User
+  apps_bank_account_models_Account -> apps_members_models_User
   [label=" user (accounts)"] [arrowhead=none, arrowtail=dot, dir=both];
 
-  apps_account_models_Account -> apps_trashcan_models_TrashableModel
+  apps_bank_account_models_Account -> apps_trashcan_models_TrashableModel
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
+  apps_members_models_User -> django_contrib_auth_models_Group
+  [label=" groups (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  apps_members_models_User -> django_contrib_auth_models_Permission
+  [label=" user_permissions (user)"] [arrowhead=dot arrowtail=dot, dir=both];
+
   apps_members_models_User -> django_contrib_auth_base_user_AbstractBaseUser
+  [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
+
+  apps_members_models_User -> django_contrib_auth_models_PermissionsMixin
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
@@ -2584,7 +2638,6 @@ digraph model_graph {
 
   apps_transaction_models_Transaction -> apps_members_models_User
   [label=" deleted_by (deleted_transaction_set)"] [arrowhead=none, arrowtail=dot, dir=both];
-
 
   apps_transaction_models_Transaction -> apps_bank_account_models_Account
   [label=" account (transactions)"] [arrowhead=none, arrowtail=dot, dir=both];
