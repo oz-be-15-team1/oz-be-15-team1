@@ -15,3 +15,7 @@ uv.lock
 Thumbs.db
 
 .env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/

@@ -182,6 +182,15 @@ class SocialTokenView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_summary="소셜 로그인 토큰 발급",
+        operation_description="소셜 로그인 세션을 JWT 토큰으로 교환합니다.",
+        responses={
+            200: openapi.Response("토큰 발급 성공", UserLoginResponseSerializer),
+            401: "인증 실패",
+        },
+        tags=["회원 관리"],
+    )
     def get(self, request):
         user = request.user
         refresh = RefreshToken.for_user(user)
