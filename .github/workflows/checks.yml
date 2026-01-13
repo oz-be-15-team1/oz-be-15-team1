@@ -28,9 +28,11 @@ jobs:
     env:
       DB_HOST: localhost
       DB_PORT: 5432
+      DB_NAME: budget
       POSTGRES_DB: budget
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      DB_SSLMODE: disable
       SECRET_KEY: test-secret-key
       DEBUG: 1
       DJANGO_SETTINGS_MODULE: config.settings.dev

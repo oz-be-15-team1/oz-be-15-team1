@@ -197,3 +197,22 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # bubget
 BUDGET_ALERT_DEDUP_MINUTES = 5
+
+# database
+
+DB_SSLMODE = os.getenv("DB_SSLMODE", "disable")
+# 운영환경에서는 DB_SSLMODE=require 로 세팅
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.getenv("DB_PORT", "5432"),
+        "NAME": os.getenv("DB_NAME", "django"),
+        "USER": os.getenv("DB_USER", "postgres"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
+        "OPTIONS": {
+            "sslmode": DB_SSLMODE,
+        },
+    }
+}
