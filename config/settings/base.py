@@ -200,6 +200,9 @@ BUDGET_ALERT_DEDUP_MINUTES = 5
 
 # database
 
+DB_SSLMODE = os.getenv("DB_SSLMODE", "disable")
+# 운영환경에서는 DB_SSLMODE=require 로 세팅
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -209,7 +212,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "postgres"),
         "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
         "OPTIONS": {
-            "sslmode": "require",
+            "sslmode": DB_SSLMODE,
         },
     }
 }
