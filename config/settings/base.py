@@ -133,9 +133,9 @@ LOGOUT_REDIRECT_URL = "/"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "budget"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "postgres"),
+        "NAME": os.getenv("POSTGRES_DB") or os.getenv("DB_NAME", "budget"),
+        "USER": os.getenv("POSTGRES_USER") or os.getenv("DB_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD") or os.getenv("DB_PASSWORD", "postgres"),
         "HOST": os.getenv("DB_HOST", "db"),
         "PORT": os.getenv("DB_PORT", "5432"),
     }
@@ -199,20 +199,6 @@ CELERY_TIMEZONE = TIME_ZONE
 BUDGET_ALERT_DEDUP_MINUTES = 5
 
 # database
-
 DB_SSLMODE = os.getenv("DB_SSLMODE", "disable")
 # 운영환경에서는 DB_SSLMODE=require 로 세팅
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "5432"),
-        "NAME": os.getenv("DB_NAME", "django"),
-        "USER": os.getenv("DB_USER", "postgres"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "postgres"),
-        "OPTIONS": {
-            "sslmode": DB_SSLMODE,
-        },
-    }
-}
+DATABASES["default"]["OPTIONS"] = {"sslmode": DB_SSLMODE}
