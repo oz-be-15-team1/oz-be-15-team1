@@ -27,6 +27,9 @@ const navItems = [
 
 export default function App() {
   const [token, setTokenState] = useState(getToken());
+  const docsUrl = apiOrigin
+    ? `${apiOrigin}/swagger/`
+    : "http://budgettest.duckdns.org/swagger/";
 
   return (
     <div className="app-shell">
@@ -65,7 +68,7 @@ export default function App() {
           )}
           <a
             className="docs"
-            href={apiOrigin ? `${apiOrigin}/swagger/` : "/swagger/"}
+            href={docsUrl}
             target="_blank"
             rel="noreferrer"
           >

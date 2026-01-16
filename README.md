@@ -53,6 +53,12 @@ docker compose -f docker-compose.dev.yml up --build
 - Redoc: `http://localhost:8000/redoc/`
 - Frontend: `http://localhost:5173`
 
+## 배포 주소
+
+- Frontend: `http://3.35.79.124:5173/`
+- Swagger: `http://budgettest.duckdns.org/swagger/`
+- Admin: `http://budgettest.duckdns.org/admin/`
+
 ## 로컬 개발 (백엔드만)
 
 사전 준비: Python 3.12, `uv`, PostgreSQL, Redis
