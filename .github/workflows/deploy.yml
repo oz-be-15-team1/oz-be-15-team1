@@ -1,0 +1,30 @@
+name: CI/CD Deploy to EC2
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout (for CI checks if you want later)
+        uses: actions/checkout@v4
+
+      # (선택) 여기서 테스트/린트 추가 가능
+      # - name: Run tests
+      #   run: |
+      #     pip install -r requirements.txt
+      #     pytest
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu/oz-be-15-team1
+            ./deploy.sh
